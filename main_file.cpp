@@ -63,9 +63,8 @@ void freeOpenGLProgram(GLFWwindow* window) {
     //************Place any code here that needs to be executed once, after the main loop ends************
 }
 
-void table(float angle) {
+glm::mat4 table(glm::mat4 unitMatrix, float angle) {
     using namespace glm;
-    mat4 unitMatrix = mat4(1.0f);
     unitMatrix = rotate(unitMatrix, angle, vec3(0.0f, 1.0f, 0.0f));
 
     mat4 legMatrix = translate(unitMatrix, vec3(0.0f, -1.0f, 0.0f));
@@ -79,6 +78,8 @@ void table(float angle) {
     mat4 scaledTableMatrix = scale(tableMatrix, vec3(1.0f, 0.125f, 1.0f));
     glUniformMatrix4fv(spConstant->u("M"), 1, false, value_ptr(scaledTableMatrix));
     Models::cube.drawSolid();
+
+    return translate(tableMatrix, vec3(0.0f, 0.125f, 0.0f));
 }
 
 // Drawing procedure
@@ -93,7 +94,8 @@ void drawScene(GLFWwindow* window, float angle) {
     glUniformMatrix4fv(spConstant->u("P"), 1, false, glm::value_ptr(P));
     glUniformMatrix4fv(spConstant->u("V"), 1, false, glm::value_ptr(V));
 
-    table(angle);
+    glm::mat4 unitMatrix = glm::mat4(1.0f);
+    table(unitMatrix, angle);
 
     glfwSwapBuffers(window);  // Copy back buffer to the front buffer
 }
