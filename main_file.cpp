@@ -29,6 +29,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "shaderprogram.h"
 
 float speed = 0;  //[radians/s]
+float fishSpeed = 0;
 
 // Error processing callback procedure
 void error_callback(int error, const char* description) {
@@ -41,10 +42,13 @@ void key_callback(GLFWwindow* window, int key,
     if (action == GLFW_PRESS) {
         if (key == GLFW_KEY_LEFT) speed = -PI;  // Je�eli wci�ni�to klawisz "w lewo" ustaw pr�dko�� na -PI
         if (key == GLFW_KEY_RIGHT) speed = PI;  // Je�eli wci�ni�to klawisz "w prawo" ustaw pr�dko�� na PI
+        if (key == GLFW_KEY_A) fishSpeed = -PI;
+        if (key == GLFW_KEY_D) fishSpeed = PI;
     }
 
     if (action == GLFW_RELEASE) {
         if (key == GLFW_KEY_LEFT || key == GLFW_KEY_RIGHT) speed = 0;
+        if (key == GLFW_KEY_A || key == GLFW_KEY_D) fishSpeed = 0;
     }
 }
 
@@ -97,8 +101,22 @@ glm::mat4 aquarium(glm::mat4 initMatrix) {
     return aquariumMatrix;
 }
 
+glm::mat4 fish(glm::mat4 initMatrix, float angle) {
+    using namespace glm;
+
+    mat4 fishMatrix = rotate(initMatrix, angle, vec3(0.0f, 1.0f, 0.0f));
+    fishMatrix = translate(fishMatrix, vec3(0.5f, 0.0f, 0.0f));
+
+    glUniform4f(spConstant->u("color"), 0, 1, 0, 1);
+    glUniformMatrix4fv(spConstant->u("M"), 1, false, value_ptr(fishMatrix));
+    Models::Sphere sphere(0.8, 12, 12);
+    sphere.drawSolid();
+
+    return fishMatrix;
+}
+
 // Drawing procedure
-void drawScene(GLFWwindow* window, float angle) {
+void drawScene(GLFWwindow* window, float angle, float fishAngle) {
     //************Place any code here that draws something inside the window******************l
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // Clear color and depth buffers
 
@@ -113,7 +131,8 @@ void drawScene(GLFWwindow* window, float angle) {
     unitMatrix = glm::rotate(unitMatrix, angle, glm::vec3(0.0f, 1.0f, 0.0f));
 
     glm::mat4 tableMatrix = table(unitMatrix);
-    aquarium(tableMatrix);
+    glm::mat4 aquariumMatrix = aquarium(tableMatrix);
+    fish(aquariumMatrix, fishAngle);
 
     glfwSwapBuffers(window);  // Copy back buffer to the front buffer
 }
@@ -149,12 +168,15 @@ int main(void) {
 
     // Main application loop
     float angle = 0;                        // declare variable for storing current rotation angle
+    float fishAngle = 0;
     glfwSetTime(0);                         // clear internal timer
     while (!glfwWindowShouldClose(window))  // As long as the window shouldnt be closed yet...
     {
-        angle += speed * glfwGetTime();        // Compute an angle by which the object was rotated during the previous frame
+        double time = glfwGetTime();
+        angle += speed * time;  // Compute an angle by which the object was rotated during the previous frame
+        fishAngle += fishSpeed * time;
         glfwSetTime(0);                        // clear internal timer
-        drawScene(window, angle);              // Execute drawing procedure
+        drawScene(window, angle, fishAngle);   // Execute drawing procedure
         glfwPollEvents();                      // Process callback procedures corresponding to the events that took place up to now
     }
     freeOpenGLProgram(window);
