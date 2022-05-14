@@ -60,6 +60,7 @@ void initOpenGLProgram(GLFWwindow* window) {
     glEnable(GL_DEPTH_TEST);   // Turn on pixel depth test based on depth buffer
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
+    glDisable(GL_CULL_FACE);
     glfwSetKeyCallback(window, key_callback);
 }
 
@@ -75,30 +76,31 @@ glm::mat4 table(glm::mat4 initMatrix) {
 
     mat4 legMatrix = translate(initMatrix, vec3(0.0f, -1.0f, 0.0f));
     mat4 scaledLegMatrix = scale(legMatrix, vec3(0.125f, 0.5f, 0.125f));
-    glUniform4f(spConstant->u("color"), 1, 1, 1, 1);
-    glUniformMatrix4fv(spConstant->u("M"), 1, false, value_ptr(scaledLegMatrix));
+    glUniform4f(spLambert->u("color"), 1, 1, 1, 1);
+    glUniformMatrix4fv(spLambert->u("M"), 1, false, value_ptr(scaledLegMatrix));
     Models::cube.drawSolid();
 
     mat4 tableMatrix = legMatrix;
     tableMatrix = translate(tableMatrix, vec3(0.0f, 0.625f, 0.0f));
     mat4 scaledTableMatrix = scale(tableMatrix, vec3(1.0f, 0.125f, 1.0f));
-    glUniformMatrix4fv(spConstant->u("M"), 1, false, value_ptr(scaledTableMatrix));
+    glUniformMatrix4fv(spLambert->u("M"), 1, false, value_ptr(scaledTableMatrix));
     Models::cube.drawSolid();
 
     return translate(tableMatrix, vec3(0.0f, 0.125f, 0.0f));
 }
 
 // returns matrix at the center of the aquarium
-glm::mat4 aquarium(glm::mat4 initMatrix) {
+glm::mat4 aquariumNoDraw(glm::mat4 initMatrix) {
     using namespace glm;
+    return translate(initMatrix, vec3(0.0f, 0.5f, 0.0f));
+}
 
-    mat4 aquariumMatrix = translate(initMatrix, vec3(0.0f, 0.5f, 0.0f));
+void aquariumDraw(glm::mat4 aquariumMatrix) {
+    using namespace glm;
     mat4 scaledAquariumMatrix = scale(aquariumMatrix, vec3(0.9f, 0.5f, 0.9f));
-    glUniform4f(spConstant->u("color"), 0, 0, 1, 0.5f);
-    glUniformMatrix4fv(spConstant->u("M"), 1, false, value_ptr(scaledAquariumMatrix));
+    glUniform4f(spLambert->u("color"), 0, 0, 1, 0.3f);
+    glUniformMatrix4fv(spLambert->u("M"), 1, false, value_ptr(scaledAquariumMatrix));
     Models::cube.drawSolid();
-
-    return aquariumMatrix;
 }
 
 glm::mat4 fish(glm::mat4 initMatrix, float angle) {
@@ -107,9 +109,9 @@ glm::mat4 fish(glm::mat4 initMatrix, float angle) {
     mat4 fishMatrix = rotate(initMatrix, angle, vec3(0.0f, 1.0f, 0.0f));
     fishMatrix = translate(fishMatrix, vec3(0.5f, 0.0f, 0.0f));
 
-    glUniform4f(spConstant->u("color"), 0, 1, 0, 1);
-    glUniformMatrix4fv(spConstant->u("M"), 1, false, value_ptr(fishMatrix));
-    Models::Sphere sphere(0.8, 12, 12);
+    glUniform4f(spLambert->u("color"), 0, 1, 0, 1);
+    glUniformMatrix4fv(spLambert->u("M"), 1, false, value_ptr(fishMatrix));
+    Models::Sphere sphere(0.1, 12, 12);
     sphere.drawSolid();
 
     return fishMatrix;
@@ -123,16 +125,17 @@ void drawScene(GLFWwindow* window, float angle, float fishAngle) {
     glm::mat4 P = glm::perspective(glm::radians(50.0f), 1.0f, 1.0f, 50.0f);                                             // Compute projection matrix
     glm::mat4 V = glm::lookAt(glm::vec3(0.0f, 0.0f, -7.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));  // Compute view matrix
 
-    spConstant->use();  // Aktywacja programu cieniuj�cego
-    glUniformMatrix4fv(spConstant->u("P"), 1, false, glm::value_ptr(P));
-    glUniformMatrix4fv(spConstant->u("V"), 1, false, glm::value_ptr(V));
+    spLambert->use();  // Aktywacja programu cieniuj�cego
+    glUniformMatrix4fv(spLambert->u("P"), 1, false, glm::value_ptr(P));
+    glUniformMatrix4fv(spLambert->u("V"), 1, false, glm::value_ptr(V));
 
     glm::mat4 unitMatrix = glm::mat4(1.0f);
     unitMatrix = glm::rotate(unitMatrix, angle, glm::vec3(0.0f, 1.0f, 0.0f));
 
     glm::mat4 tableMatrix = table(unitMatrix);
-    glm::mat4 aquariumMatrix = aquarium(tableMatrix);
+    glm::mat4 aquariumMatrix = aquariumNoDraw(tableMatrix);  // I have to draw the aquarium at the end because of the alpha channel
     fish(aquariumMatrix, fishAngle);
+    aquariumDraw(aquariumMatrix);
 
     glfwSwapBuffers(window);  // Copy back buffer to the front buffer
 }
