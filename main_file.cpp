@@ -29,9 +29,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "shaderprogram.h"
 
 float speed = 0;  //[radians/s]
-float turn = 0;   // skret k�
-
-Models::Torus carWheel(0.3, 0.1, 12, 12);
 
 // Error processing callback procedure
 void error_callback(int error, const char* description) {
@@ -44,17 +41,10 @@ void key_callback(GLFWwindow* window, int key,
     if (action == GLFW_PRESS) {
         if (key == GLFW_KEY_LEFT) speed = -PI;  // Je�eli wci�ni�to klawisz "w lewo" ustaw pr�dko�� na -PI
         if (key == GLFW_KEY_RIGHT) speed = PI;  // Je�eli wci�ni�to klawisz "w prawo" ustaw pr�dko�� na PI
-        if (key == GLFW_KEY_A) {
-            turn = PI / 6;
-        }
-        if (key == GLFW_KEY_D) {
-            turn = -PI / 6;
-        }
     }
 
     if (action == GLFW_RELEASE) {
         if (key == GLFW_KEY_LEFT || key == GLFW_KEY_RIGHT) speed = 0;
-        if (key == GLFW_KEY_A || key == GLFW_KEY_D) turn = 0;
     }
 }
 
@@ -73,58 +63,37 @@ void freeOpenGLProgram(GLFWwindow* window) {
     //************Place any code here that needs to be executed once, after the main loop ends************
 }
 
-void car2(float angle, float wheelAngle) {
-    glm::mat4 Ms = glm::mat4(1.0f);
-    Ms = glm::rotate(Ms, angle, glm::vec3(0.0f, 1.0f, 0.0f));
+void table(float angle) {
+    using namespace glm;
+    mat4 unitMatrix = mat4(1.0f);
+    unitMatrix = rotate(unitMatrix, angle, vec3(0.0f, 1.0f, 0.0f));
 
-    // Chassis
-    glm::mat4 Mp = glm::scale(Ms, glm::vec3(1.5f, 0.125f, 1.0f));
-    glUniform4f(spLambert->u("color"), 1, 1, 1, 1);
-    glUniformMatrix4fv(spLambert->u("M"), 1, false, glm::value_ptr(Mp));
+    mat4 legMatrix = translate(unitMatrix, vec3(0.0f, -1.0f, 0.0f));
+    mat4 scaledLegMatrix = scale(legMatrix, vec3(0.125f, 0.5f, 0.125f));
+    glUniform4f(spConstant->u("color"), 1, 1, 1, 1);
+    glUniformMatrix4fv(spConstant->u("M"), 1, false, value_ptr(scaledLegMatrix));
     Models::cube.drawSolid();
 
-    // Wheel 1
-    glm::mat4 Mk1 = Ms;
-    Mk1 = glm::translate(Mk1, glm::vec3(1.5f, 0.0f, 1.0f));
-    Mk1 = glm::rotate(Mk1, turn, glm::vec3(0.0f, 1.0f, 0.0f));
-    Mk1 = glm::rotate(Mk1, wheelAngle, glm::vec3(0.0f, 0.0f, 1.0f));
-    glUniformMatrix4fv(spLambert->u("M"), 1, false, glm::value_ptr(Mk1));
-    carWheel.drawWire();
-
-    // Wheel 2
-    glm::mat4 Mk2 = Ms;
-    Mk2 = glm::translate(Mk2, glm::vec3(1.5f, 0.0f, -1.0f));
-    Mk2 = glm::rotate(Mk2, turn, glm::vec3(0.0f, 1.0f, 0.0f));
-    Mk2 = glm::rotate(Mk2, wheelAngle, glm::vec3(0.0f, 0.0f, 1.0f));
-    glUniformMatrix4fv(spLambert->u("M"), 1, false, glm::value_ptr(Mk2));
-    carWheel.drawWire();
-
-    // Wheel 3
-    glm::mat4 Mk3 = Ms;
-    Mk3 = glm::translate(Mk3, glm::vec3(-1.5f, 0.0f, 1.0f));
-    Mk3 = glm::rotate(Mk3, wheelAngle, glm::vec3(0.0f, 0.0f, 1.0f));
-    glUniformMatrix4fv(spLambert->u("M"), 1, false, glm::value_ptr(Mk3));
-    carWheel.drawWire();
-
-    // Wheel 4
-    glm::mat4 Mk4 = Ms;
-    Mk4 = glm::translate(Mk4, glm::vec3(-1.5f, 0.0f, -1.0f));
-    Mk4 = glm::rotate(Mk4, wheelAngle, glm::vec3(0.0f, 0.0f, 1.0f));
-    glUniformMatrix4fv(spLambert->u("M"), 1, false, glm::value_ptr(Mk4));
-    carWheel.drawWire();
+    mat4 tableMatrix = legMatrix;
+    tableMatrix = translate(tableMatrix, vec3(0.0f, 0.625f, 0.0f));
+    mat4 scaledTableMatrix = scale(tableMatrix, vec3(1.0f, 0.125f, 1.0f));
+    glUniformMatrix4fv(spConstant->u("M"), 1, false, value_ptr(scaledTableMatrix));
+    Models::cube.drawSolid();
 }
 
 // Drawing procedure
-void drawScene(GLFWwindow* window, float angle, float wheelAngle) {
+void drawScene(GLFWwindow* window, float angle) {
     //************Place any code here that draws something inside the window******************l
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // Clear color and depth buffers
 
     glm::mat4 P = glm::perspective(glm::radians(50.0f), 1.0f, 1.0f, 50.0f);                                             // Compute projection matrix
     glm::mat4 V = glm::lookAt(glm::vec3(0.0f, 0.0f, -7.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));  // Compute view matrix
 
-    spLambert->use();  // Aktywacja programu cieniuj�cego
-    glUniformMatrix4fv(spLambert->u("P"), 1, false, glm::value_ptr(P));
-    glUniformMatrix4fv(spLambert->u("V"), 1, false, glm::value_ptr(V));
+    spConstant->use();  // Aktywacja programu cieniuj�cego
+    glUniformMatrix4fv(spConstant->u("P"), 1, false, glm::value_ptr(P));
+    glUniformMatrix4fv(spConstant->u("V"), 1, false, glm::value_ptr(V));
+
+    table(angle);
 
     glfwSwapBuffers(window);  // Copy back buffer to the front buffer
 }
@@ -159,15 +128,13 @@ int main(void) {
     initOpenGLProgram(window);  // Call initialization procedure
 
     // Main application loop
-    float angle = 0;  // declare variable for storing current rotation angle
-    float wheelAngle = 0;
+    float angle = 0;                        // declare variable for storing current rotation angle
     glfwSetTime(0);                         // clear internal timer
     while (!glfwWindowShouldClose(window))  // As long as the window shouldnt be closed yet...
     {
         angle += speed * glfwGetTime();        // Compute an angle by which the object was rotated during the previous frame
-        wheelAngle += PI / 6 * glfwGetTime();  // Compute an angle by which the object was rotated during the previous frame
         glfwSetTime(0);                        // clear internal timer
-        drawScene(window, angle, wheelAngle);  // Execute drawing procedure
+        drawScene(window, angle);              // Execute drawing procedure
         glfwPollEvents();                      // Process callback procedures corresponding to the events that took place up to now
     }
     freeOpenGLProgram(window);
