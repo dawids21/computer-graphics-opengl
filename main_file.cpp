@@ -63,11 +63,11 @@ void freeOpenGLProgram(GLFWwindow* window) {
     //************Place any code here that needs to be executed once, after the main loop ends************
 }
 
-glm::mat4 table(glm::mat4 unitMatrix, float angle) {
+// returns matrix on the top of the table, at center point
+glm::mat4 table(glm::mat4 initMatrix) {
     using namespace glm;
-    unitMatrix = rotate(unitMatrix, angle, vec3(0.0f, 1.0f, 0.0f));
 
-    mat4 legMatrix = translate(unitMatrix, vec3(0.0f, -1.0f, 0.0f));
+    mat4 legMatrix = translate(initMatrix, vec3(0.0f, -1.0f, 0.0f));
     mat4 scaledLegMatrix = scale(legMatrix, vec3(0.125f, 0.5f, 0.125f));
     glUniform4f(spConstant->u("color"), 1, 1, 1, 1);
     glUniformMatrix4fv(spConstant->u("M"), 1, false, value_ptr(scaledLegMatrix));
@@ -80,6 +80,19 @@ glm::mat4 table(glm::mat4 unitMatrix, float angle) {
     Models::cube.drawSolid();
 
     return translate(tableMatrix, vec3(0.0f, 0.125f, 0.0f));
+}
+
+// returns matrix at the center of the aquarium
+glm::mat4 aquarium(glm::mat4 initMatrix) {
+    using namespace glm;
+
+    mat4 aquariumMatrix = translate(initMatrix, vec3(0.0f, 0.5f, 0.0f));
+    mat4 scaledAquariumMatrix = scale(aquariumMatrix, vec3(0.9f, 0.5f, 0.9f));
+    glUniform4f(spConstant->u("color"), 0, 0, 1, 1);
+    glUniformMatrix4fv(spConstant->u("M"), 1, false, value_ptr(scaledAquariumMatrix));
+    Models::cube.drawSolid();
+
+    return aquariumMatrix;
 }
 
 // Drawing procedure
@@ -95,7 +108,10 @@ void drawScene(GLFWwindow* window, float angle) {
     glUniformMatrix4fv(spConstant->u("V"), 1, false, glm::value_ptr(V));
 
     glm::mat4 unitMatrix = glm::mat4(1.0f);
-    table(unitMatrix, angle);
+    unitMatrix = glm::rotate(unitMatrix, angle, glm::vec3(0.0f, 1.0f, 0.0f));
+
+    glm::mat4 tableMatrix = table(unitMatrix);
+    aquarium(tableMatrix);
 
     glfwSwapBuffers(window);  // Copy back buffer to the front buffer
 }
