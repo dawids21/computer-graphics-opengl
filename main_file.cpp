@@ -54,6 +54,8 @@ void initOpenGLProgram(GLFWwindow* window) {
     //************Place any code here that needs to be executed once, at the program start************
     glClearColor(0, 0, 0, 1);  // Set color buffer clear color
     glEnable(GL_DEPTH_TEST);   // Turn on pixel depth test based on depth buffer
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    glEnable(GL_BLEND);
     glfwSetKeyCallback(window, key_callback);
 }
 
@@ -88,7 +90,7 @@ glm::mat4 aquarium(glm::mat4 initMatrix) {
 
     mat4 aquariumMatrix = translate(initMatrix, vec3(0.0f, 0.5f, 0.0f));
     mat4 scaledAquariumMatrix = scale(aquariumMatrix, vec3(0.9f, 0.5f, 0.9f));
-    glUniform4f(spConstant->u("color"), 0, 0, 1, 1);
+    glUniform4f(spConstant->u("color"), 0, 0, 1, 0.5f);
     glUniformMatrix4fv(spConstant->u("M"), 1, false, value_ptr(scaledAquariumMatrix));
     Models::cube.drawSolid();
 
