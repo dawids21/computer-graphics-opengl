@@ -32,7 +32,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "tiny_obj_loader.h"
 
 float speed = 0;  //[radians/s]
-float fishSpeed = 0;
 std::vector<float> fishVertices;
 std::vector<float> fishNormals;
 
@@ -47,13 +46,10 @@ void key_callback(GLFWwindow* window, int key,
     if (action == GLFW_PRESS) {
         if (key == GLFW_KEY_LEFT) speed = -PI;  // Je�eli wci�ni�to klawisz "w lewo" ustaw pr�dko�� na -PI
         if (key == GLFW_KEY_RIGHT) speed = PI;  // Je�eli wci�ni�to klawisz "w prawo" ustaw pr�dko�� na PI
-        if (key == GLFW_KEY_A) fishSpeed = -PI;
-        if (key == GLFW_KEY_D) fishSpeed = PI;
     }
 
     if (action == GLFW_RELEASE) {
         if (key == GLFW_KEY_LEFT || key == GLFW_KEY_RIGHT) speed = 0;
-        if (key == GLFW_KEY_A || key == GLFW_KEY_D) fishSpeed = 0;
     }
 }
 
@@ -194,7 +190,7 @@ int main(void) {
     {
         double time = glfwGetTime();
         angle += speed * time;  // Compute an angle by which the object was rotated during the previous frame
-        fishAngle += fishSpeed * time;
+        fishAngle += -PI * time;
         glfwSetTime(0);                        // clear internal timer
         drawScene(window, angle, fishAngle);   // Execute drawing procedure
         glfwPollEvents();                      // Process callback procedures corresponding to the events that took place up to now
