@@ -14,12 +14,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #define GLM_FORCE_RADIANS
+#define TINYOBJLOADER_IMPLEMENTATION
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "ObjLoader.hpp"
 #include "allmodels.h"
 #include "constants.h"
 #include "glm/glm.hpp"
@@ -27,9 +29,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "glm/gtc/type_ptr.hpp"
 #include "lodepng.h"
 #include "shaderprogram.h"
+#include "tiny_obj_loader.h"
 
 float speed = 0;  //[radians/s]
 float fishSpeed = 0;
+std::vector<float> fishVertices;
+std::vector<float> fishNormals;
 
 // Error processing callback procedure
 void error_callback(int error, const char* description) {
@@ -61,6 +66,10 @@ void initOpenGLProgram(GLFWwindow* window) {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
     glDisable(GL_CULL_FACE);
+    ObjLoader objLoader;
+    objLoader.load("models/fish1.obj");
+    fishVertices = objLoader.getVertices();
+    fishNormals = objLoader.getNormals();
     glfwSetKeyCallback(window, key_callback);
 }
 
@@ -106,13 +115,21 @@ void aquariumDraw(glm::mat4 aquariumMatrix) {
 glm::mat4 fish(glm::mat4 initMatrix, float angle) {
     using namespace glm;
 
-    mat4 fishMatrix = rotate(initMatrix, angle, vec3(0.0f, 1.0f, 0.0f));
+    mat4 fishMatrix = rotate(initMatrix, -PI / 2, vec3(1.0f, 0.0f, 0.0f));
+    fishMatrix = rotate(fishMatrix, angle, vec3(0.0f, 0.0f, 1.0f));
     fishMatrix = translate(fishMatrix, vec3(0.5f, 0.0f, 0.0f));
+    mat4 scaledFishMatrix = scale(fishMatrix, vec3(0.05f, 0.05f, 0.05f));
 
     glUniform4f(spLambert->u("color"), 0, 1, 0, 1);
-    glUniformMatrix4fv(spLambert->u("M"), 1, false, value_ptr(fishMatrix));
-    Models::Sphere sphere(0.1, 12, 12);
-    sphere.drawSolid();
+    glUniformMatrix4fv(spLambert->u("M"), 1, false, value_ptr(scaledFishMatrix));
+
+    glEnableVertexAttribArray(spLambert->a("vertex"));
+    glVertexAttribPointer(spLambert->a("vertex"), 4, GL_FLOAT, false, 0, &fishVertices[0]);
+    glEnableVertexAttribArray(spLambert->a("normal"));
+    glVertexAttribPointer(spLambert->a("normal"), 4, GL_FLOAT, false, 0, &fishNormals[0]);
+    glDrawArrays(GL_TRIANGLES, 0, fishVertices.size() / 4);
+    glDisableVertexAttribArray(spLambert->a("vertex"));
+    glDisableVertexAttribArray(spLambert->a("normal"));
 
     return fishMatrix;
 }
