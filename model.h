@@ -17,10 +17,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define MODEL_H
 
 #include <GL/glew.h>
-#include <vector>
-#include <glm/glm.hpp>
 #include <GLFW/glfw3.h>
+
+#include <vector>
+
 #include "constants.h"
+#include "glm/glm.hpp"
 
 namespace Models {
 
