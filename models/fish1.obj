@@ -1,10 +1,10 @@
 # 3ds Max Wavefront OBJ Exporter v0.97b - (c)2007 guruware
 # File Created: 06.01.2012 15:39:11
 
-mtllib 13006_Blue_Tang_v1_l3.mtl
+mtllib fish1.mtl
 
 #
-# object 13006_Blue_Tang_v1
+# object fish1
 #
 
 v  0.0477 5.9717 5.0419
@@ -75696,8 +75696,8 @@ vt 0.8186 0.5703 0.0000
 vt 0.8241 0.5652 0.0000
 # 26412 texture coords
 
-g 13006_Blue_Tang_v1
-usemtl 13006_Blue_Tang_v1
+g fish1
+usemtl fish1
 s 2
 f 1/1/1 2/2/2 3/3/3 4/4/4 
 f 5/5/5 6/6/6 3/3/3 2/2/2 
