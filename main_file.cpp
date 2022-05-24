@@ -31,7 +31,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "shaderprogram.h"
 #include "tiny_obj_loader.h"
 
+using namespace glm;
+
 float speed = 0;  //[radians/s]
+
+// camera movement
+float speed_y = 0; //[radiany/s]
+float speed_x = 0; //[radiany/s]
+float ws = 0;
+
+vec3 pos = vec3(0, 0.5, -5);
+vec3 pos_prev = vec3(0, 0.5, -5);
+vec3 dir = vec3(0, 0, 1);
+
 std::vector<float> fishVertices;
 std::vector<float> fishNormals;
 
@@ -42,15 +54,26 @@ void error_callback(int error, const char* description) {
 
 // Procedura obs�ugi klawiatury
 void key_callback(GLFWwindow* window, int key,
-                  int scancode, int action, int mods) {
-    if (action == GLFW_PRESS) {
-        if (key == GLFW_KEY_LEFT) speed = -PI;  // Je�eli wci�ni�to klawisz "w lewo" ustaw pr�dko�� na -PI
-        if (key == GLFW_KEY_RIGHT) speed = PI;  // Je�eli wci�ni�to klawisz "w prawo" ustaw pr�dko�� na PI
-    }
+                  int scancode, int action, int mod)
+ {
+	if (action == GLFW_PRESS) {
+		if (key == GLFW_KEY_LEFT) speed_y = 1;
+		if (key == GLFW_KEY_RIGHT) speed_y = -1;
+		if (key == GLFW_KEY_PAGE_UP) speed_x = 1;
+		if (key == GLFW_KEY_PAGE_DOWN) speed_x = -1;
+		if (key == GLFW_KEY_UP) ws = 1;
+		if (key == GLFW_KEY_DOWN) ws= -1;
+	}
+	if (action == GLFW_RELEASE) {
+		if (key == GLFW_KEY_LEFT) speed_y = 0;
+		if (key == GLFW_KEY_RIGHT) speed_y = 0;	
 
-    if (action == GLFW_RELEASE) {
-        if (key == GLFW_KEY_LEFT || key == GLFW_KEY_RIGHT) speed = 0;
-    }
+		if (key == GLFW_KEY_UP) ws = 0;
+		if (key == GLFW_KEY_DOWN) ws = 0;
+		
+		if (key == GLFW_KEY_PAGE_UP) speed_x = 0;
+		if (key == GLFW_KEY_PAGE_DOWN) speed_x = -0;
+	}
 }
 
 // Initialization code procedure
@@ -136,7 +159,7 @@ void drawScene(GLFWwindow* window, float angle, float fishAngle) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // Clear color and depth buffers
 
     glm::mat4 P = glm::perspective(glm::radians(50.0f), 1.0f, 1.0f, 50.0f);                                             // Compute projection matrix
-    glm::mat4 V = glm::lookAt(glm::vec3(0.0f, 0.0f, -7.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));  // Compute view matrix
+    glm::mat4 V = glm::lookAt(pos, pos+dir, glm::vec3(0.0f, 1.0f, 0.0f));  // Compute view matrix
 
     spLambert->use();  // Aktywacja programu cieniuj�cego
     glUniformMatrix4fv(spLambert->u("P"), 1, false, glm::value_ptr(P));
@@ -185,12 +208,39 @@ int main(void) {
     // Main application loop
     float angle = 0;                        // declare variable for storing current rotation angle
     float fishAngle = 0;
+
+
+    float angle_y = 0;
+    float angle_x = 0;
+
     glfwSetTime(0);                         // clear internal timer
     while (!glfwWindowShouldClose(window))  // As long as the window shouldnt be closed yet...
     {
+
+        angle_y += speed_y * glfwGetTime();
+        angle_x += speed_x * glfwGetTime();
+
+		mat4 Mc = rotate(mat4(1.0f), angle_y, vec3(0, 1, 0));
+		Mc = rotate(Mc, angle_x, vec3(1, 0, 0));
+		vec4 dir_ = Mc*vec4(0, 0, 1, 0);
+		dir = vec3(dir_);
+
+
+		vec3 mdir = normalize(vec3(dir.x, 0, dir.z));
+
         double time = glfwGetTime();
+      
+		pos+=ws* (float)time * mdir;
+
+        if(abs(pos.x) < 2 && abs(pos.z) < 2){
+            pos = vec3(pos_prev.x, pos.y, pos_prev.z);       // border 2 X 2, size of the table
+        }
+
         angle += speed * time;  // Compute an angle by which the object was rotated during the previous frame
         fishAngle += -PI * time;
+
+
+        pos_prev = pos;
         glfwSetTime(0);                        // clear internal timer
         drawScene(window, angle, fishAngle);   // Execute drawing procedure
         glfwPollEvents();                      // Process callback procedures corresponding to the events that took place up to now
