@@ -46,6 +46,7 @@ vec3 dir = vec3(0, 0, 1);
 
 std::vector<float> fishVertices;
 std::vector<float> fishNormals;
+std::vector<float> fishTexcoords;
 
 // Error processing callback procedure
 void error_callback(int error, const char* description) {
@@ -89,6 +90,7 @@ void initOpenGLProgram(GLFWwindow* window) {
     objLoader.load("models/fish1.obj");
     fishVertices = objLoader.getVertices();
     fishNormals = objLoader.getNormals();
+    fishTexcoords = objLoader.getTextcoords();
     glfwSetKeyCallback(window, key_callback);
 }
 

@@ -21,6 +21,7 @@ struct Coord {
 struct Triangle {
     struct Coord vertex;
     struct Coord normal;
+    struct Coord texture;
 };
 
 ObjLoader::ObjLoader() {
@@ -50,16 +51,22 @@ void ObjLoader::load(string filename) {
     auto& shapes = reader.GetShapes();
     auto& materials = reader.GetMaterials();
 
-    std::vector<struct Loaded> fishVertex;
-    std::vector<struct Loaded> fishNormal;
+    std::vector<struct Loaded> vertices;
+    std::vector<struct Loaded> normals;
+    std::vector<struct Loaded> texcoords;
 
     for (size_t i = 0; i < attrib.vertices.size(); i += 3) {
-        fishVertex.push_back({attrib.vertices[i],
-                              attrib.vertices[i + 1],
-                              attrib.vertices[i + 2]});
-        fishNormal.push_back({attrib.normals[i],
-                              attrib.normals[i + 1],
-                              attrib.normals[i + 2]});
+        vertices.push_back({attrib.vertices[i],
+                            attrib.vertices[i + 1],
+                            attrib.vertices[i + 2]});
+        normals.push_back({attrib.normals[i],
+                           attrib.normals[i + 1],
+                           attrib.normals[i + 2]});
+    }
+    for (size_t i = 0; i < attrib.vertices.size(); i += 2) {
+        texcoords.push_back({attrib.texcoords[i],
+                             attrib.texcoords[i + 1],
+                             0});
     }
 
     std::vector<struct Triangle> triangles;
@@ -71,44 +78,58 @@ void ObjLoader::load(string filename) {
         for (size_t index = 0; index < material_ids.size(); ++index) {
             // offset by 3 because values are grouped as vertex/normal/texture
             triangles.push_back({{indices[4 * index].vertex_index, indices[4 * index + 1].vertex_index, indices[4 * index + 2].vertex_index},
-                                 {indices[4 * index].normal_index, indices[4 * index + 1].normal_index, indices[4 * index + 2].normal_index}});
+                                 {indices[4 * index].normal_index, indices[4 * index + 1].normal_index, indices[4 * index + 2].normal_index},
+                                 {indices[4 * index].texcoord_index, indices[4 * index + 1].texcoord_index, indices[4 * index + 2].texcoord_index}});
             triangles.push_back({{indices[4 * index].vertex_index, indices[4 * index + 2].vertex_index, indices[4 * index + 3].vertex_index},
-                                 {indices[4 * index].normal_index, indices[4 * index + 2].normal_index, indices[4 * index + 3].normal_index}});
+                                 {indices[4 * index].normal_index, indices[4 * index + 2].normal_index, indices[4 * index + 3].normal_index},
+                                 {indices[4 * index].texcoord_index, indices[4 * index + 2].texcoord_index, indices[4 * index + 3].texcoord_index}});
         }
     }
 
     for (size_t i = 0; i < triangles.size(); i++) {
-        this->vertices.push_back(fishVertex[triangles[i].vertex.x].x);
-        this->vertices.push_back(fishVertex[triangles[i].vertex.x].y);
-        this->vertices.push_back(fishVertex[triangles[i].vertex.x].z);
+        this->vertices.push_back(vertices[triangles[i].vertex.x].x);
+        this->vertices.push_back(vertices[triangles[i].vertex.x].y);
+        this->vertices.push_back(vertices[triangles[i].vertex.x].z);
         this->vertices.push_back(1.0f);
-        this->vertices.push_back(fishVertex[triangles[i].vertex.y].x);
-        this->vertices.push_back(fishVertex[triangles[i].vertex.y].y);
-        this->vertices.push_back(fishVertex[triangles[i].vertex.y].z);
+        this->vertices.push_back(vertices[triangles[i].vertex.y].x);
+        this->vertices.push_back(vertices[triangles[i].vertex.y].y);
+        this->vertices.push_back(vertices[triangles[i].vertex.y].z);
         this->vertices.push_back(1.0f);
-        this->vertices.push_back(fishVertex[triangles[i].vertex.z].x);
-        this->vertices.push_back(fishVertex[triangles[i].vertex.z].y);
-        this->vertices.push_back(fishVertex[triangles[i].vertex.z].z);
+        this->vertices.push_back(vertices[triangles[i].vertex.z].x);
+        this->vertices.push_back(vertices[triangles[i].vertex.z].y);
+        this->vertices.push_back(vertices[triangles[i].vertex.z].z);
         this->vertices.push_back(1.0f);
 
-        this->normals.push_back(fishNormal[triangles[i].normal.x].x);
-        this->normals.push_back(fishNormal[triangles[i].normal.x].y);
-        this->normals.push_back(fishNormal[triangles[i].normal.x].z);
+        this->normals.push_back(normals[triangles[i].normal.x].x);
+        this->normals.push_back(normals[triangles[i].normal.x].y);
+        this->normals.push_back(normals[triangles[i].normal.x].z);
         this->normals.push_back(0.0f);
-        this->normals.push_back(fishNormal[triangles[i].normal.y].x);
-        this->normals.push_back(fishNormal[triangles[i].normal.y].y);
-        this->normals.push_back(fishNormal[triangles[i].normal.y].z);
+        this->normals.push_back(normals[triangles[i].normal.y].x);
+        this->normals.push_back(normals[triangles[i].normal.y].y);
+        this->normals.push_back(normals[triangles[i].normal.y].z);
         this->normals.push_back(0.0f);
-        this->normals.push_back(fishNormal[triangles[i].normal.z].x);
-        this->normals.push_back(fishNormal[triangles[i].normal.z].y);
-        this->normals.push_back(fishNormal[triangles[i].normal.z].z);
+        this->normals.push_back(normals[triangles[i].normal.z].x);
+        this->normals.push_back(normals[triangles[i].normal.z].y);
+        this->normals.push_back(normals[triangles[i].normal.z].z);
         this->normals.push_back(0.0f);
+
+        this->texcoords.push_back(texcoords[triangles[i].texture.x].x);
+        this->texcoords.push_back(texcoords[triangles[i].texture.x].y);
+        this->texcoords.push_back(texcoords[triangles[i].texture.y].x);
+        this->texcoords.push_back(texcoords[triangles[i].texture.y].y);
+        this->texcoords.push_back(texcoords[triangles[i].texture.z].x);
+        this->texcoords.push_back(texcoords[triangles[i].texture.z].y);
     }
 }
 
 std::vector<float> ObjLoader::getVertices() {
     return this->vertices;
 }
+
 std::vector<float> ObjLoader::getNormals() {
     return this->normals;
+}
+
+std::vector<float> ObjLoader::getTextcoords() {
+    return this->texcoords;
 }

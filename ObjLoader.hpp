@@ -10,6 +10,7 @@ class ObjLoader {
    private:
     std::vector<float> vertices;
     std::vector<float> normals;
+    std::vector<float> texcoords;
 
    public:
     ObjLoader();
@@ -17,6 +18,7 @@ class ObjLoader {
     void load(std::string filename);
     std::vector<float> getVertices();
     std::vector<float> getNormals();
+    std::vector<float> getTextcoords();
 };
 
 #endif  // OBJ_LOADER
