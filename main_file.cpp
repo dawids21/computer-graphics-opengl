@@ -100,12 +100,23 @@ void freeOpenGLProgram(GLFWwindow* window) {
     //************Place any code here that needs to be executed once, after the main loop ends************
 }
 
+void activateLambertShader() {
+    glm::mat4 P = glm::perspective(glm::radians(50.0f), 1.0f, 1.0f, 50.0f);
+    glm::mat4 V = glm::lookAt(pos, pos + dir, glm::vec3(0.0f, 1.0f, 0.0f));
+
+    spLambert->use();
+    glUniformMatrix4fv(spLambert->u("P"), 1, false, glm::value_ptr(P));
+    glUniformMatrix4fv(spLambert->u("V"), 1, false, glm::value_ptr(V));
+}
+
 // returns matrix on the top of the table, at center point
 glm::mat4 table(glm::mat4 initMatrix) {
     using namespace glm;
 
     mat4 legMatrix = translate(initMatrix, vec3(0.0f, -1.0f, 0.0f));
     mat4 scaledLegMatrix = scale(legMatrix, vec3(0.125f, 0.5f, 0.125f));
+
+    activateLambertShader();
     glUniform4f(spLambert->u("color"), 1, 1, 1, 1);
     glUniformMatrix4fv(spLambert->u("M"), 1, false, value_ptr(scaledLegMatrix));
     Models::cube.drawSolid();
@@ -128,6 +139,8 @@ glm::mat4 aquariumNoDraw(glm::mat4 initMatrix) {
 void aquariumDraw(glm::mat4 aquariumMatrix) {
     using namespace glm;
     mat4 scaledAquariumMatrix = scale(aquariumMatrix, vec3(0.9f, 0.5f, 0.9f));
+
+    activateLambertShader();
     glUniform4f(spLambert->u("color"), 0, 0, 1, 0.3f);
     glUniformMatrix4fv(spLambert->u("M"), 1, false, value_ptr(scaledAquariumMatrix));
     Models::cube.drawSolid();
@@ -141,6 +154,7 @@ glm::mat4 fish(glm::mat4 initMatrix, float angle) {
     fishMatrix = translate(fishMatrix, vec3(0.5f, 0.0f, 0.0f));
     mat4 scaledFishMatrix = scale(fishMatrix, vec3(0.05f, 0.05f, 0.05f));
 
+    activateLambertShader();
     glUniform4f(spLambert->u("color"), 0, 1, 0, 1);
     glUniformMatrix4fv(spLambert->u("M"), 1, false, value_ptr(scaledFishMatrix));
 
@@ -159,13 +173,6 @@ glm::mat4 fish(glm::mat4 initMatrix, float angle) {
 void drawScene(GLFWwindow* window, float angle, float fishAngle) {
     //************Place any code here that draws something inside the window******************l
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // Clear color and depth buffers
-
-    glm::mat4 P = glm::perspective(glm::radians(50.0f), 1.0f, 1.0f, 50.0f);                                             // Compute projection matrix
-    glm::mat4 V = glm::lookAt(pos, pos+dir, glm::vec3(0.0f, 1.0f, 0.0f));  // Compute view matrix
-
-    spLambert->use();  // Aktywacja programu cieniuj�cego
-    glUniformMatrix4fv(spLambert->u("P"), 1, false, glm::value_ptr(P));
-    glUniformMatrix4fv(spLambert->u("V"), 1, false, glm::value_ptr(V));
 
     glm::mat4 unitMatrix = glm::mat4(1.0f);
     unitMatrix = glm::rotate(unitMatrix, angle, glm::vec3(0.0f, 1.0f, 0.0f));
