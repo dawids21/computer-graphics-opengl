@@ -11,7 +11,7 @@
 
 ## Dawid
 - [ ] jaśniejsza woda 
-- [ ] nałożyć rybę
+- [x] nałożyć rybę
 - [ ] znaleźć modele ryb
 - [ ] roślinki na dnie
 - [ ] dodać zmienne konfiguracyjne
