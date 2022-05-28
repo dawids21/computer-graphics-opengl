@@ -59,11 +59,13 @@ void ObjLoader::load(string filename) {
         vertices.push_back({attrib.vertices[i],
                             attrib.vertices[i + 1],
                             attrib.vertices[i + 2]});
+    }
+    for (size_t i = 0; i < attrib.normals.size(); i += 3) {
         normals.push_back({attrib.normals[i],
                            attrib.normals[i + 1],
                            attrib.normals[i + 2]});
     }
-    for (size_t i = 0; i < attrib.vertices.size(); i += 2) {
+    for (size_t i = 0; i < attrib.texcoords.size(); i += 2) {
         texcoords.push_back({attrib.texcoords[i],
                              attrib.texcoords[i + 1],
                              0});
