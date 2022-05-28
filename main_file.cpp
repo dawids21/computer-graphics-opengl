@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdlib.h>
 
 #include "ObjLoader.hpp"
+#include "TextureLoader.hpp"
 #include "allmodels.h"
 #include "constants.h"
 #include "glm/glm.hpp"
@@ -43,6 +44,8 @@ float ws = 0;
 vec3 pos = vec3(0, 0.5, -5);
 vec3 pos_prev = vec3(0, 0.5, -5);
 vec3 dir = vec3(0, 0, 1);
+
+TextureLoader textureLoader;
 
 std::vector<float> fishVertices;
 std::vector<float> fishNormals;
@@ -91,6 +94,7 @@ void initOpenGLProgram(GLFWwindow* window) {
     fishVertices = objLoader.getVertices();
     fishNormals = objLoader.getNormals();
     fishTexcoords = objLoader.getTextcoords();
+    textureLoader.loadTexture("models/fish1.jpg");
     glfwSetKeyCallback(window, key_callback);
 }
 
