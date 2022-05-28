@@ -18,14 +18,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ShaderProgram *spLambert;
 ShaderProgram *spConstant;
+ShaderProgram* spLambertTextured;
 
 void initShaders(){
     spLambert=new ShaderProgram("v_lambert.glsl",NULL,"f_lambert.glsl");
     spConstant=new ShaderProgram("v_constant.glsl",NULL,"f_constant.glsl");
+    spLambertTextured = new ShaderProgram("v_lamberttextured.glsl", NULL, "f_lamberttextured.glsl");
 }
 
 void freeShaders(){
     delete spLambert;
+    delete spConstant;
+    delete spLambertTextured;
 }
 
 
