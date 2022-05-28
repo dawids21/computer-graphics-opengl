@@ -109,6 +109,15 @@ void activateLambertShader() {
     glUniformMatrix4fv(spLambert->u("V"), 1, false, glm::value_ptr(V));
 }
 
+void activateLambertTexturedShader() {
+    glm::mat4 P = glm::perspective(glm::radians(50.0f), 1.0f, 1.0f, 50.0f);
+    glm::mat4 V = glm::lookAt(pos, pos + dir, glm::vec3(0.0f, 1.0f, 0.0f));
+
+    spLambertTextured->use();
+    glUniformMatrix4fv(spLambertTextured->u("P"), 1, false, glm::value_ptr(P));
+    glUniformMatrix4fv(spLambertTextured->u("V"), 1, false, glm::value_ptr(V));
+}
+
 // returns matrix on the top of the table, at center point
 glm::mat4 table(glm::mat4 initMatrix) {
     using namespace glm;
