@@ -133,7 +133,7 @@ glm::mat4 table(glm::mat4 initMatrix) {
     using namespace glm;
 
     mat4 legMatrix = translate(initMatrix, vec3(0.0f, -1.0f, 0.0f));
-    mat4 scaledLegMatrix = scale(legMatrix, vec3(0.125f, 0.5f, 0.125f));
+    mat4 scaledLegMatrix = scale(legMatrix, vec3(0.125f, (C_TABLE_HEIGHT - 0.25f) / 2.0f, 0.125f));
 
     activateLambertShader();
     glUniform4f(spLambert->u("color"), 1, 1, 1, 1);
@@ -141,7 +141,7 @@ glm::mat4 table(glm::mat4 initMatrix) {
     Models::cube.drawSolid();
 
     mat4 tableMatrix = legMatrix;
-    tableMatrix = translate(tableMatrix, vec3(0.0f, 0.625f, 0.0f));
+    tableMatrix = translate(tableMatrix, vec3(0.0f, C_TABLE_HEIGHT / 2.0f, 0.0f));
     mat4 scaledTableMatrix = scale(tableMatrix, vec3(1.0f, 0.125f, 1.0f));
     glUniformMatrix4fv(spLambert->u("M"), 1, false, value_ptr(scaledTableMatrix));
     Models::cube.drawSolid();
