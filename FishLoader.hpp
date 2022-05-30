@@ -24,8 +24,9 @@ class FishLoader {
     std::vector<Fish> fish;
 
    public:
-    FishLoader(TextureLoader textureLoader);
+    FishLoader();
     ~FishLoader();
+    void load(TextureLoader *textureLoader);
     Fish getFish(FishType fishType);
     glm::mat4 getMatrix(FishType fishType, glm::mat4 matrix);
 };

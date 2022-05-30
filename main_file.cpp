@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <string>
 
+#include "FishLoader.hpp"
 #include "ObjLoader.hpp"
 #include "TextureLoader.hpp"
 #include "allmodels.h"
@@ -47,15 +48,7 @@ vec3 pos_prev = vec3(0, C_PERSON_HEIGHT, -5);
 vec3 dir = vec3(0, 0, 1);
 
 TextureLoader textureLoader;
-
-std::vector<float> fishVertices;
-std::vector<float> fishNormals;
-std::vector<float> fishTexcoords;
-int fishTextureId;
-
-std::string objFilename = "13006_Blue_Tang_v1_l3.obj";
-std::string objTexFilename = "13006_Blue_Tang_v1_diff.png";
-std::string path = "./models/fish/blue";
+FishLoader fishLoader;
 
 // Error processing callback procedure
 void error_callback(int error, const char* description) {
@@ -94,13 +87,8 @@ void initOpenGLProgram(GLFWwindow* window) {
     glEnable(GL_DEPTH_TEST);   // Turn on pixel depth test based on depth buffer
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
+    fishLoader.load(&textureLoader);
     glDisable(GL_CULL_FACE);
-    ObjLoader objLoader;
-    objLoader.load(path + "/" + objFilename, path);
-    fishVertices = objLoader.getVertices();
-    fishNormals = objLoader.getNormals();
-    fishTexcoords = objLoader.getTextcoords();
-    fishTextureId = textureLoader.loadTexture(path + "/" + objTexFilename);
     glfwSetKeyCallback(window, key_callback);
 }
 
@@ -173,20 +161,22 @@ glm::mat4 fish(glm::mat4 initMatrix, float angle) {
     fishMatrix = translate(fishMatrix, vec3(0.5f, 0.0f, 0.0f));
     mat4 scaledFishMatrix = scale(fishMatrix, vec3(0.05f, 0.05f, 0.05f));
 
+    Fish fish = fishLoader.getFish(BLUE);
+
     activateLambertTexturedShader();
     glUniformMatrix4fv(spLambertTextured->u("M"), 1, false, value_ptr(scaledFishMatrix));
 
     glEnableVertexAttribArray(spLambertTextured->a("vertex"));
-    glVertexAttribPointer(spLambertTextured->a("vertex"), 4, GL_FLOAT, false, 0, &fishVertices[0]);
+    glVertexAttribPointer(spLambertTextured->a("vertex"), 4, GL_FLOAT, false, 0, &fish.vertex[0]);
     glEnableVertexAttribArray(spLambertTextured->a("normal"));
-    glVertexAttribPointer(spLambertTextured->a("normal"), 4, GL_FLOAT, false, 0, &fishNormals[0]);
+    glVertexAttribPointer(spLambertTextured->a("normal"), 4, GL_FLOAT, false, 0, &fish.normal[0]);
     glEnableVertexAttribArray(spLambertTextured->a("texCoord"));
-    glVertexAttribPointer(spLambertTextured->a("texCoord"), 2, GL_FLOAT, false, 0, &fishTexcoords[0]);
+    glVertexAttribPointer(spLambertTextured->a("texCoord"), 2, GL_FLOAT, false, 0, &fish.texCoord[0]);
 
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, textureLoader.getTexture(fishTextureId));
+    glBindTexture(GL_TEXTURE_2D, textureLoader.getTexture(fish.textureId));
     glUniform1i(spLambertTextured->u("tex"), 0);
-    glDrawArrays(GL_TRIANGLES, 0, fishVertices.size() / 4);
+    glDrawArrays(GL_TRIANGLES, 0, fish.vertex.size() / 4);
     glDisableVertexAttribArray(spLambertTextured->a("vertex"));
     glDisableVertexAttribArray(spLambertTextured->a("normal"));
     glDisableVertexAttribArray(spLambertTextured->a("texCoord"));

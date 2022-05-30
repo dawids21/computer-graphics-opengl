@@ -1,5 +1,6 @@
 #include "FishLoader.hpp"
 
+#include <iostream>
 #include <string>
 
 #include "ObjLoader.hpp"
@@ -12,23 +13,27 @@ struct FishInfo {
     string path;
 };
 
-FishLoader::FishLoader(TextureLoader textureLoader) {
-    vector<struct FishInfo> info = {{"13006_Blue_Tang_v1_l3.obj", "13006_Blue_Tang_v1_diff.png", "./models/fish/blue"}};
+FishLoader::FishLoader() {
+}
+
+FishLoader::~FishLoader() {
+}
+
+void FishLoader::load(TextureLoader *textureLoader) {
+    vector<struct FishInfo> info;
+    info.push_back({"13006_Blue_Tang_v1_l3.obj", "13006_Blue_Tang_v1_diff.png", "./models/fish/blue"});
 
     ObjLoader objLoader;
     FishType types[] = {BLUE};
-    for (size_t i = 0; i < sizeof(types) / sizeof(FishType); i++) {
+    for (size_t i = 0; i < size(types); i++) {
         FishType type = types[i];
         objLoader.load(info[type].path + "/" + info[type].objFilename, info[type].path);
         Fish fish = {objLoader.getVertices(),
                      objLoader.getNormals(),
                      objLoader.getTextcoords(),
-                     textureLoader.loadTexture(info[type].path + "/" + info[type].texFilename)};
+                     textureLoader->loadTexture(info[type].path + "/" + info[type].texFilename)};
         this->fish.push_back(fish);
     }
-}
-
-FishLoader::~FishLoader() {
 }
 
 Fish FishLoader::getFish(FishType fishType) {
