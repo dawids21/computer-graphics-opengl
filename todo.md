@@ -10,7 +10,7 @@
 - [ ] niebo 
 
 ## Dawid
-- [ ] jaśniejsza woda 
+- [x] jaśniejsza woda 
 - [x] nałożyć rybę
 - [ ] znaleźć modele ryb
 - [ ] roślinki na dnie

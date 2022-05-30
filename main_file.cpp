@@ -155,7 +155,7 @@ void aquariumDraw(glm::mat4 aquariumMatrix) {
     mat4 scaledAquariumMatrix = scale(aquariumMatrix, vec3(0.9f, 0.5f, 0.9f));
 
     activateLambertShader();
-    glUniform4f(spLambert->u("color"), 0, 0, 1, 0.3f);
+    glUniform4f(spLambert->u("color"), 0.5f, 1.0f, 1.0f, 0.3f);
     glUniformMatrix4fv(spLambert->u("M"), 1, false, value_ptr(scaledAquariumMatrix));
     Models::cube.drawSolid();
 }
