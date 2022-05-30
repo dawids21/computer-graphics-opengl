@@ -142,7 +142,7 @@ glm::mat4 table(glm::mat4 initMatrix) {
 
     mat4 tableMatrix = legMatrix;
     tableMatrix = translate(tableMatrix, vec3(0.0f, C_TABLE_HEIGHT / 2.0f, 0.0f));
-    mat4 scaledTableMatrix = scale(tableMatrix, vec3(1.0f, 0.125f, 1.0f));
+    mat4 scaledTableMatrix = scale(tableMatrix, vec3((C_AQUARIUM_WIDTH / 2.0f) + 0.1f, 0.125f, (C_AQUARIUM_DEPTH / 2.0f) + 0.1f));
     glUniformMatrix4fv(spLambert->u("M"), 1, false, value_ptr(scaledTableMatrix));
     Models::cube.drawSolid();
 
@@ -157,7 +157,7 @@ glm::mat4 aquariumNoDraw(glm::mat4 initMatrix) {
 
 void aquariumDraw(glm::mat4 aquariumMatrix) {
     using namespace glm;
-    mat4 scaledAquariumMatrix = scale(aquariumMatrix, vec3(0.9f, C_AQUARIUM_HEIGHT / 2.0f, 0.9f));
+    mat4 scaledAquariumMatrix = scale(aquariumMatrix, vec3(C_AQUARIUM_WIDTH / 2.0f, C_AQUARIUM_HEIGHT / 2.0f, C_AQUARIUM_DEPTH / 2.0f));
 
     activateLambertShader();
     glUniform4f(spLambert->u("color"), 0.5f, 1.0f, 1.0f, 0.3f);
@@ -263,11 +263,11 @@ int main(void) {
 		vec3 mdir = normalize(vec3(dir.x, 0, dir.z));
 
         double time = glfwGetTime();
-      
-		pos+=ws* (float)time * mdir;
 
-        if(abs(pos.x) < 2 && abs(pos.z) < 2){
-            pos = vec3(pos_prev.x, pos.y, pos_prev.z);       // border 2 X 2, size of the table
+        pos += ws * (float)time * mdir;
+
+        if (abs(pos.x) < C_AQUARIUM_WIDTH + 0.1f && abs(pos.z) < C_AQUARIUM_DEPTH + 0.1f) {
+            pos = vec3(pos_prev.x, pos.y, pos_prev.z);
         }
 
         angle += speed * time;  // Compute an angle by which the object was rotated during the previous frame
