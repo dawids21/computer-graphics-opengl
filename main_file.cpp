@@ -42,8 +42,8 @@ float speed_y = 0; //[radiany/s]
 float speed_x = 0; //[radiany/s]
 float ws = 0;
 
-vec3 pos = vec3(0, 0.5, -5);
-vec3 pos_prev = vec3(0, 0.5, -5);
+vec3 pos = vec3(0, C_PERSON_HEIGHT, -5);
+vec3 pos_prev = vec3(0, C_PERSON_HEIGHT, -5);
 vec3 dir = vec3(0, 0, 1);
 
 TextureLoader textureLoader;
