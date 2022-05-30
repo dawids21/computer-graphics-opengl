@@ -10,7 +10,7 @@ TextureLoader::TextureLoader() {
 TextureLoader::~TextureLoader() {
 }
 
-int TextureLoader::loadTexture(const char* filename) {
+int TextureLoader::loadTexture(std::string filename) {
     GLuint tex;
     glActiveTexture(GL_TEXTURE0);
 

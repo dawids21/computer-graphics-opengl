@@ -1,6 +1,7 @@
 #if !defined(TEXUTRE_LOADER_HPP)
 #define TEXUTRE_LOADER_HPP
 
+#include <string>
 #include <vector>
 
 #include "GL/glew.h"
@@ -12,7 +13,7 @@ class TextureLoader {
    public:
     TextureLoader();
     ~TextureLoader();
-    int loadTexture(const char* filename);
+    int loadTexture(std::string filename);
     GLuint getTexture(int id);
 };
 

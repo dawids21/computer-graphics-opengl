@@ -2,8 +2,8 @@
 #define OBJ_LOADER
 
 #include <stdlib.h>
-
 #include <string>
+
 #include <vector>
 
 class ObjLoader {
@@ -15,7 +15,7 @@ class ObjLoader {
    public:
     ObjLoader();
     ~ObjLoader();
-    void load(std::string filename);
+    void load(std::string filename, std::string path);
     std::vector<float> getVertices();
     std::vector<float> getNormals();
     std::vector<float> getTextcoords();

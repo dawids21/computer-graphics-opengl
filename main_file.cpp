@@ -20,6 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <string>
+
 #include "ObjLoader.hpp"
 #include "TextureLoader.hpp"
 #include "allmodels.h"
@@ -50,6 +52,10 @@ std::vector<float> fishVertices;
 std::vector<float> fishNormals;
 std::vector<float> fishTexcoords;
 int fishTextureId;
+
+std::string objFilename = "13006_Blue_Tang_v1_l3.obj";
+std::string objTexFilename = "13006_Blue_Tang_v1_diff.png";
+std::string path = "./models/fish/blue";
 
 // Error processing callback procedure
 void error_callback(int error, const char* description) {
@@ -90,11 +96,11 @@ void initOpenGLProgram(GLFWwindow* window) {
     glEnable(GL_BLEND);
     glDisable(GL_CULL_FACE);
     ObjLoader objLoader;
-    objLoader.load("models/fish1.obj");
+    objLoader.load(path + "/" + objFilename, path);
     fishVertices = objLoader.getVertices();
     fishNormals = objLoader.getNormals();
     fishTexcoords = objLoader.getTextcoords();
-    fishTextureId = textureLoader.loadTexture("models/fish1.png");
+    fishTextureId = textureLoader.loadTexture(path + "/" + objTexFilename);
     glfwSetKeyCallback(window, key_callback);
 }
 

@@ -32,9 +32,9 @@ ObjLoader::ObjLoader() {
 ObjLoader::~ObjLoader() {
 }
 
-void ObjLoader::load(string filename) {
+void ObjLoader::load(std::string filename, std::string path) {
     tinyobj::ObjReaderConfig reader_config;
-    reader_config.mtl_search_path = "./models";  // Path to material files
+    reader_config.mtl_search_path = path;  // Path to material files
     reader_config.triangulate = false;
     tinyobj::ObjReader reader;
 
