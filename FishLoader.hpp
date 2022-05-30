@@ -3,14 +3,15 @@
 
 #include <vector>
 
+#include "TextureLoader.hpp"
 #include "glm/glm.hpp"
 
-struct {
+struct Fish {
     std::vector<float> vertex;
     std::vector<float> normal;
     std::vector<float> texCoord;
     int textureId;
-} Fish;
+};
 
 typedef struct Fish Fish;
 
@@ -23,7 +24,7 @@ class FishLoader {
     std::vector<Fish> fish;
 
    public:
-    FishLoader();
+    FishLoader(TextureLoader textureLoader);
     ~FishLoader();
     Fish getFish(FishType fishType);
     glm::mat4 getMatrix(FishType fishType, glm::mat4 matrix);
