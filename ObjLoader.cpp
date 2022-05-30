@@ -33,6 +33,10 @@ ObjLoader::~ObjLoader() {
 }
 
 void ObjLoader::load(std::string filename, std::string path) {
+    this->vertices.clear();
+    this->normals.clear();
+    this->texcoords.clear();
+
     tinyobj::ObjReaderConfig reader_config;
     reader_config.mtl_search_path = path;  // Path to material files
     reader_config.triangulate = false;
