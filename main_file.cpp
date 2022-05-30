@@ -14,7 +14,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 #define GLM_FORCE_RADIANS
-#define TINYOBJLOADER_IMPLEMENTATION
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -30,7 +29,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "glm/gtc/type_ptr.hpp"
 #include "lodepng.h"
 #include "shaderprogram.h"
-#include "tiny_obj_loader.h"
 
 using namespace glm;
 
