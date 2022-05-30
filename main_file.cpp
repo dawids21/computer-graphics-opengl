@@ -156,8 +156,7 @@ void aquariumDraw(glm::mat4 aquariumMatrix) {
 glm::mat4 fish(glm::mat4 initMatrix, float angle) {
     using namespace glm;
 
-    mat4 fishMatrix = rotate(initMatrix, -PI / 2, vec3(1.0f, 0.0f, 0.0f));
-    fishMatrix = rotate(fishMatrix, angle, vec3(0.0f, 0.0f, 1.0f));
+    mat4 fishMatrix = rotate(initMatrix, angle, vec3(0.0f, 1.0f, 0.0f));
     fishMatrix = translate(fishMatrix, vec3(0.5f, 0.0f, 0.0f));
     mat4 scaledFishMatrix = scale(fishMatrix, vec3(0.05f, 0.05f, 0.05f));
 
