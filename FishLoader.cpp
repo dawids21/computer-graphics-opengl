@@ -45,7 +45,3 @@ void FishLoader::load(TextureLoader *textureLoader) {
 Fish FishLoader::getFish(FishType fishType) {
     return this->fish[fishType];
 }
-
-glm::mat4 FishLoader::getMatrix(FishType fishType, glm::mat4 matrix) {
-    return glm::mat4(1.0f);
-};
