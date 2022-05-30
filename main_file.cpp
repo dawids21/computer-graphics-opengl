@@ -116,6 +116,42 @@ void activateLambertTexturedShader() {
     glUniformMatrix4fv(spLambertTextured->u("V"), 1, false, glm::value_ptr(V));
 }
 
+void floor(glm:: mat4 initMatrix){
+    //using namespace glm;
+
+    mat4 floorMatrix = translate(initMatrix, vec3(0,-2 * C_TABLE_HEIGHT, 0));
+    floorMatrix = scale(floorMatrix, vec3(20.0f, 0.1f, 20.0f));
+    glUniform4f(spLambert->u("color"), 0.5, 0.8, 0.4, 1);
+    glUniformMatrix4fv(spLambert->u("M"), 1, false, value_ptr(floorMatrix));
+    Models::cube.drawSolid();
+}
+
+void walls(glm:: mat4 initMatrix){
+    mat4 wallMatrix1 = translate(initMatrix, vec3(0,0,20));
+    wallMatrix1 = scale(wallMatrix1, vec3(20.0f, 5.0f, 0.1f));
+    glUniform4f(spLambert->u("color"), 0.2, 0.6, 0.4, 1);
+    glUniformMatrix4fv(spLambert->u("M"), 1, false, value_ptr(wallMatrix1));
+    Models::cube.drawSolid();
+
+    mat4 wallMatrix2 = translate(initMatrix, vec3(0,0,-20));
+    wallMatrix2 = scale(wallMatrix2, vec3(20.0f, 5.0f, 0.1f));
+    glUniform4f(spLambert->u("color"), 0.2, 0.9, 0.4, 1);
+    glUniformMatrix4fv(spLambert->u("M"), 1, false, value_ptr(wallMatrix2));
+    Models::cube.drawSolid();
+
+    mat4 wallMatrix3 = translate(initMatrix, vec3(20,0,0));
+    wallMatrix3 = scale(wallMatrix3, vec3(0.1f, 5.0f, 20.0f));
+    glUniform4f(spLambert->u("color"), 0.9, 0.9, 0.4, 1);
+    glUniformMatrix4fv(spLambert->u("M"), 1, false, value_ptr(wallMatrix3));
+    Models::cube.drawSolid();
+
+    mat4 wallMatrix4 = translate(initMatrix, vec3(-20,0,0));
+    wallMatrix4 = scale(wallMatrix4, vec3(0.1f, 5.0f, 20.0f));
+    glUniform4f(spLambert->u("color"), 0.2, 0.2, 0.4, 1);
+    glUniformMatrix4fv(spLambert->u("M"), 1, false, value_ptr(wallMatrix4));
+    Models::cube.drawSolid();
+}
+
 // returns matrix on the top of the table, at center point
 glm::mat4 table(glm::mat4 initMatrix) {
     using namespace glm;
@@ -190,6 +226,9 @@ void drawScene(GLFWwindow* window, float angle, float fishAngle) {
 
     glm::mat4 unitMatrix = glm::mat4(1.0f);
     unitMatrix = glm::rotate(unitMatrix, angle, glm::vec3(0.0f, 1.0f, 0.0f));
+
+    floor(unitMatrix);
+    walls(unitMatrix);
 
     glm::mat4 tableMatrix = table(unitMatrix);
     glm::mat4 aquariumMatrix = aquariumNoDraw(tableMatrix);  // I have to draw the aquarium at the end because of the alpha channel
