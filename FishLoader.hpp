@@ -16,7 +16,13 @@ struct Fish {
 typedef struct Fish Fish;
 
 enum FishType {
-    BLUE = 0
+    BLUE = 0,
+    BOESEMANI = 1,
+    CORAL = 2,
+    GOLD = 3,
+    SOLON = 4,
+    TURKUS = 5,
+    YELLOW = 6
 };
 
 class FishLoader {
