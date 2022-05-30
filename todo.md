@@ -14,4 +14,4 @@
 - [x] nałożyć rybę
 - [ ] znaleźć modele ryb
 - [ ] roślinki na dnie
-- [ ] dodać zmienne konfiguracyjne
+- [x] dodać zmienne konfiguracyjne
