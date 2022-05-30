@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "ObjLoader.hpp"
 #include "TextureLoader.hpp"
 #include "allmodels.h"
+#include "config.hpp"
 #include "constants.h"
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
