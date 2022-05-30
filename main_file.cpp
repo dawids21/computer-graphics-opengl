@@ -152,12 +152,12 @@ glm::mat4 table(glm::mat4 initMatrix) {
 // returns matrix at the center of the aquarium
 glm::mat4 aquariumNoDraw(glm::mat4 initMatrix) {
     using namespace glm;
-    return translate(initMatrix, vec3(0.0f, 0.5f, 0.0f));
+    return translate(initMatrix, vec3(0.0f, C_AQUARIUM_HEIGHT / 2.0f, 0.0f));
 }
 
 void aquariumDraw(glm::mat4 aquariumMatrix) {
     using namespace glm;
-    mat4 scaledAquariumMatrix = scale(aquariumMatrix, vec3(0.9f, 0.5f, 0.9f));
+    mat4 scaledAquariumMatrix = scale(aquariumMatrix, vec3(0.9f, C_AQUARIUM_HEIGHT / 2.0f, 0.9f));
 
     activateLambertShader();
     glUniform4f(spLambert->u("color"), 0.5f, 1.0f, 1.0f, 0.3f);
