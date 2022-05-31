@@ -242,7 +242,7 @@ glm::mat4 fish1(glm::mat4 initMatrix) {
 glm::mat4 fish2(glm::mat4 initMatrix) {
     using namespace glm;
 
-    mat4 fishMatrix = translate(initMatrix, vec3((C_AQUARIUM_WIDTH / 2.0f) - 0.3f, 0.2f, 0.0f));
+    mat4 fishMatrix = translate(initMatrix, vec3((C_AQUARIUM_WIDTH / 2.0f) - 0.8f, 0.2f, 0.0f));
     fishMatrix = rotate(fishMatrix, -PI / 2, vec3(0.0f, 1.0f, 0.0f));
     fishMatrix = fishAnimator.getAnimation(WIDTH, fishMatrix);
     mat4 scaledFishMatrix = scale(fishMatrix, vec3(0.05f, 0.05f, 0.05f));
