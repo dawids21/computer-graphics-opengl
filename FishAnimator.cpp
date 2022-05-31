@@ -24,7 +24,7 @@ static float stepTime(float time, float startTime, float stepTime) {
     return std::min((time - startTime) / stepTime, 1.0f);
 }
 
-glm::mat4 FishAnimator::getAnimation(glm::mat4 initMatrix) {
+glm::mat4 FishAnimator::getAnimation1(glm::mat4 initMatrix) {
     using namespace glm;
 
     float currentTime = std::fmod(this->time, 6.0f);

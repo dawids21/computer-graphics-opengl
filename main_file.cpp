@@ -202,7 +202,7 @@ float stepTime(float time, float startTime, float stepTime) {
 glm::mat4 fish(glm::mat4 initMatrix) {
     using namespace glm;
 
-    mat4 fishMatrix = fishAnimator.getAnimation(initMatrix);
+    mat4 fishMatrix = fishAnimator.getAnimation1(initMatrix);
     mat4 scaledFishMatrix = scale(fishMatrix, vec3(0.05f, 0.05f, 0.05f));
 
     Fish fish = fishLoader.getFish(BLUE);
