@@ -195,10 +195,6 @@ void aquariumDraw(glm::mat4 aquariumMatrix) {
     Models::cube.drawSolid();
 }
 
-float stepTime(float time, float startTime, float stepTime) {
-    return std::min((time - startTime) / stepTime, 1.0f);
-}
-
 glm::mat4 fish(glm::mat4 initMatrix) {
     using namespace glm;
 
@@ -207,6 +203,67 @@ glm::mat4 fish(glm::mat4 initMatrix) {
     mat4 scaledFishMatrix = scale(fishMatrix, vec3(0.05f, 0.05f, 0.05f));
 
     Fish fish = fishLoader.getFish(BLUE);
+
+    activateLambertTexturedShader();
+    glUniformMatrix4fv(spLambertTextured->u("M"), 1, false, value_ptr(scaledFishMatrix));
+
+    glEnableVertexAttribArray(spLambertTextured->a("vertex"));
+    glVertexAttribPointer(spLambertTextured->a("vertex"), 4, GL_FLOAT, false, 0, &fish.vertex[0]);
+    glEnableVertexAttribArray(spLambertTextured->a("normal"));
+    glVertexAttribPointer(spLambertTextured->a("normal"), 4, GL_FLOAT, false, 0, &fish.normal[0]);
+    glEnableVertexAttribArray(spLambertTextured->a("texCoord"));
+    glVertexAttribPointer(spLambertTextured->a("texCoord"), 2, GL_FLOAT, false, 0, &fish.texCoord[0]);
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, textureLoader.getTexture(fish.textureId));
+    glUniform1i(spLambertTextured->u("tex"), 0);
+    glDrawArrays(GL_TRIANGLES, 0, fish.vertex.size() / 4);
+    glDisableVertexAttribArray(spLambertTextured->a("vertex"));
+    glDisableVertexAttribArray(spLambertTextured->a("normal"));
+    glDisableVertexAttribArray(spLambertTextured->a("texCoord"));
+
+    return fishMatrix;
+}
+
+glm::mat4 fish1(glm::mat4 initMatrix) {
+    using namespace glm;
+
+    mat4 fishMatrix = translate(initMatrix, vec3(0.0f, 0.0f, (-C_AQUARIUM_DEPTH / 2.0f) + 0.8f));
+    fishMatrix = fishAnimator.getAnimation2(fishMatrix);
+    mat4 scaledFishMatrix = scale(fishMatrix, vec3(0.05f, 0.05f, 0.05f));
+
+    Fish fish = fishLoader.getFish(GOLD);
+
+    activateLambertTexturedShader();
+    glUniformMatrix4fv(spLambertTextured->u("M"), 1, false, value_ptr(scaledFishMatrix));
+
+    glEnableVertexAttribArray(spLambertTextured->a("vertex"));
+    glVertexAttribPointer(spLambertTextured->a("vertex"), 4, GL_FLOAT, false, 0, &fish.vertex[0]);
+    glEnableVertexAttribArray(spLambertTextured->a("normal"));
+    glVertexAttribPointer(spLambertTextured->a("normal"), 4, GL_FLOAT, false, 0, &fish.normal[0]);
+    glEnableVertexAttribArray(spLambertTextured->a("texCoord"));
+    glVertexAttribPointer(spLambertTextured->a("texCoord"), 2, GL_FLOAT, false, 0, &fish.texCoord[0]);
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, textureLoader.getTexture(fish.textureId));
+    glUniform1i(spLambertTextured->u("tex"), 0);
+    glDrawArrays(GL_TRIANGLES, 0, fish.vertex.size() / 4);
+    glDisableVertexAttribArray(spLambertTextured->a("vertex"));
+    glDisableVertexAttribArray(spLambertTextured->a("normal"));
+    glDisableVertexAttribArray(spLambertTextured->a("texCoord"));
+
+    return fishMatrix;
+}
+
+glm::mat4 fish2(glm::mat4 initMatrix) {
+    using namespace glm;
+
+    mat4 fishMatrix = translate(initMatrix, vec3((C_AQUARIUM_WIDTH / 2.0f) - 0.3f, 0.0f, 0.0f));
+    fishMatrix = rotate(fishMatrix, -PI / 2, vec3(0.0f, 1.0f, 0.0f));
+    fishMatrix = fishAnimator.getAnimation3(fishMatrix);
+    mat4 scaledFishMatrix = scale(fishMatrix, vec3(0.05f, 0.05f, 0.05f));
+
+    Fish fish = fishLoader.getFish(SOLON);
 
     activateLambertTexturedShader();
     glUniformMatrix4fv(spLambertTextured->u("M"), 1, false, value_ptr(scaledFishMatrix));
@@ -243,6 +300,8 @@ void drawScene(GLFWwindow* window, float angle) {
     glm::mat4 tableMatrix = table(unitMatrix);
     glm::mat4 aquariumMatrix = aquariumNoDraw(tableMatrix);  // I have to draw the aquarium at the end because of the alpha channel
     fish(aquariumMatrix);
+    fish1(aquariumMatrix);
+    fish2(aquariumMatrix);
     aquariumDraw(aquariumMatrix);
 
     glfwSwapBuffers(window);  // Copy back buffer to the front buffer
