@@ -199,7 +199,7 @@ glm::mat4 fish(glm::mat4 initMatrix) {
     using namespace glm;
 
     mat4 fishMatrix = translate(initMatrix, vec3((C_AQUARIUM_WIDTH / 2.0f) - 0.3f, 0.0f, (-C_AQUARIUM_DEPTH / 2.0f) + 0.8f));
-    fishMatrix = fishAnimator.getAnimation1(fishMatrix);
+    fishMatrix = fishAnimator.getAnimation(FULL, fishMatrix);
     mat4 scaledFishMatrix = scale(fishMatrix, vec3(0.05f, 0.05f, 0.05f));
 
     Fish fish = fishLoader.getFish(BLUE);
@@ -229,7 +229,7 @@ glm::mat4 fish1(glm::mat4 initMatrix) {
     using namespace glm;
 
     mat4 fishMatrix = translate(initMatrix, vec3(0.0f, 0.0f, (-C_AQUARIUM_DEPTH / 2.0f) + 0.8f));
-    fishMatrix = fishAnimator.getAnimation2(fishMatrix);
+    fishMatrix = fishAnimator.getAnimation(WIDTH, fishMatrix);
     mat4 scaledFishMatrix = scale(fishMatrix, vec3(0.05f, 0.05f, 0.05f));
 
     Fish fish = fishLoader.getFish(GOLD);
@@ -260,7 +260,7 @@ glm::mat4 fish2(glm::mat4 initMatrix) {
 
     mat4 fishMatrix = translate(initMatrix, vec3((C_AQUARIUM_WIDTH / 2.0f) - 0.3f, 0.0f, 0.0f));
     fishMatrix = rotate(fishMatrix, -PI / 2, vec3(0.0f, 1.0f, 0.0f));
-    fishMatrix = fishAnimator.getAnimation3(fishMatrix);
+    fishMatrix = fishAnimator.getAnimation(DEPTH, fishMatrix);
     mat4 scaledFishMatrix = scale(fishMatrix, vec3(0.05f, 0.05f, 0.05f));
 
     Fish fish = fishLoader.getFish(SOLON);

@@ -24,7 +24,18 @@ static float stepTime(float time, float startTime, float stepTime) {
     return std::min((time - startTime) / stepTime, 1.0f);
 }
 
-glm::mat4 FishAnimator::getAnimation1(glm::mat4 initMatrix) {
+glm::mat4 FishAnimator::getAnimation(AnimationType type, glm::mat4 initMatrix) {
+    if (type == FULL) {
+        return this->getAnimationFull(initMatrix);
+    } else if (type == WIDTH) {
+        return this->getAnimationWidth(initMatrix);
+    } else if (type == DEPTH) {
+        return this->getAnimationDepth(initMatrix);
+    }
+    return initMatrix;
+}
+
+glm::mat4 FishAnimator::getAnimationFull(glm::mat4 initMatrix) {
     using namespace glm;
 
     float currentTime = std::fmod(this->time, 6.0f);
@@ -74,7 +85,7 @@ glm::mat4 FishAnimator::getAnimation1(glm::mat4 initMatrix) {
     return fishMatrix;
 }
 
-glm::mat4 FishAnimator::getAnimation2(glm::mat4 initMatrix) {
+glm::mat4 FishAnimator::getAnimationWidth(glm::mat4 initMatrix) {
     using namespace glm;
 
     float currentTime = std::fmod(this->time, 4.0f);
@@ -104,7 +115,7 @@ glm::mat4 FishAnimator::getAnimation2(glm::mat4 initMatrix) {
     return fishMatrix;
 }
 
-glm::mat4 FishAnimator::getAnimation3(glm::mat4 initMatrix) {
+glm::mat4 FishAnimator::getAnimationDepth(glm::mat4 initMatrix) {
     using namespace glm;
 
     float currentTime = std::fmod(this->time, 4.0f);
