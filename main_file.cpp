@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <cmath>
 #include <string>
 
+#include "FishAnimator.hpp"
 #include "FishLoader.hpp"
 #include "ObjLoader.hpp"
 #include "TextureLoader.hpp"
@@ -44,15 +45,13 @@ float speed_y = 0; //[radiany/s]
 float speed_x = 0; //[radiany/s]
 float ws = 0;
 
-float animationSpeed = 1.0f;
-double animationTime = 0;
-
 vec3 pos = vec3(0, C_PERSON_HEIGHT, -5);
 vec3 pos_prev = vec3(0, C_PERSON_HEIGHT, -5);
 vec3 dir = vec3(0, 0, 1);
 
 TextureLoader textureLoader;
 FishLoader fishLoader;
+FishAnimator fishAnimator;
 
 // Error processing callback procedure
 void error_callback(int error, const char* description) {
@@ -203,7 +202,7 @@ float stepTime(float time, float startTime, float stepTime) {
 glm::mat4 fish(glm::mat4 initMatrix) {
     using namespace glm;
 
-    float currentTime = std::fmod(animationTime, 6.0f);
+    float currentTime = std::fmod(fishAnimator.getTime(), 6.0f);
 
     float steps[] = {0.0f, 1.0f, 1.5f, 2.5f, 3.0f, 4.0f, 4.5f, 5.5f};
     float stepTimes[] = {1.0f, 0.5f, 1.0f, 0.5f, 1.0f, 0.5f, 1.0f, 0.5f};
@@ -329,6 +328,7 @@ int main(void) {
     float angle_x = 0;
 
     glfwSetTime(0);                         // clear internal timer
+    fishAnimator.setTime(0.0f);
     while (!glfwWindowShouldClose(window))  // As long as the window shouldnt be closed yet...
     {
 
@@ -352,7 +352,7 @@ int main(void) {
         }
 
         angle += speed * time;  // Compute an angle by which the object was rotated during the previous frame
-        animationTime += animationSpeed * time;
+        fishAnimator.addTime(time);
 
         pos_prev = pos;
         glfwSetTime(0);                        // clear internal timer
