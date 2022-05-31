@@ -9,4 +9,6 @@
 
 #define C_PERSON_HEIGHT 1.5f
 
+#define C_ROOM_SIZE 15.0f
+
 #endif  // CONFIG_HPP

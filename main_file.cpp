@@ -60,12 +60,12 @@ void key_callback(GLFWwindow* window, int key,
                   int scancode, int action, int mod)
  {
 	if (action == GLFW_PRESS) {
-		if (key == GLFW_KEY_LEFT) speed_y = 1;
-		if (key == GLFW_KEY_RIGHT) speed_y = -1;
-		if (key == GLFW_KEY_PAGE_UP) speed_x = 1;
-		if (key == GLFW_KEY_PAGE_DOWN) speed_x = -1;
-		if (key == GLFW_KEY_UP) ws = 1;
-		if (key == GLFW_KEY_DOWN) ws= -1;
+		if (key == GLFW_KEY_LEFT) speed_y = 2;
+		if (key == GLFW_KEY_RIGHT) speed_y = -2;
+		if (key == GLFW_KEY_PAGE_UP) speed_x = 2;
+		if (key == GLFW_KEY_PAGE_DOWN) speed_x = -2;
+		if (key == GLFW_KEY_UP) ws = 2;
+		if (key == GLFW_KEY_DOWN) ws= -2;
 	}
 	if (action == GLFW_RELEASE) {
 		if (key == GLFW_KEY_LEFT) speed_y = 0;
@@ -117,7 +117,6 @@ void activateLambertTexturedShader() {
 }
 
 void floor(glm:: mat4 initMatrix){
-    //using namespace glm;
 
     mat4 floorMatrix = translate(initMatrix, vec3(0,-2 * C_TABLE_HEIGHT, 0));
     floorMatrix = scale(floorMatrix, vec3(20.0f, 0.1f, 20.0f));
@@ -127,29 +126,33 @@ void floor(glm:: mat4 initMatrix){
 }
 
 void walls(glm:: mat4 initMatrix){
-    mat4 wallMatrix1 = translate(initMatrix, vec3(0,0,20));
-    wallMatrix1 = scale(wallMatrix1, vec3(20.0f, 5.0f, 0.1f));
+
+    
+    
+    mat4 wallMatrix1 = translate(initMatrix, vec3(0, 0, C_ROOM_SIZE));
+    wallMatrix1 = scale(wallMatrix1, vec3(C_ROOM_SIZE, 5.0f, 0.1f));
     glUniform4f(spLambert->u("color"), 0.2, 0.6, 0.4, 1);
     glUniformMatrix4fv(spLambert->u("M"), 1, false, value_ptr(wallMatrix1));
     Models::cube.drawSolid();
 
-    mat4 wallMatrix2 = translate(initMatrix, vec3(0,0,-20));
-    wallMatrix2 = scale(wallMatrix2, vec3(20.0f, 5.0f, 0.1f));
+    mat4 wallMatrix2 = translate(initMatrix, vec3(0, 0, -1 * C_ROOM_SIZE));
+    wallMatrix2 = scale(wallMatrix2, vec3(C_ROOM_SIZE, 5.0f, 0.1f));
     glUniform4f(spLambert->u("color"), 0.2, 0.9, 0.4, 1);
     glUniformMatrix4fv(spLambert->u("M"), 1, false, value_ptr(wallMatrix2));
     Models::cube.drawSolid();
 
-    mat4 wallMatrix3 = translate(initMatrix, vec3(20,0,0));
-    wallMatrix3 = scale(wallMatrix3, vec3(0.1f, 5.0f, 20.0f));
+    mat4 wallMatrix3 = translate(initMatrix, vec3(C_ROOM_SIZE, 0, 0));
+    wallMatrix3 = scale(wallMatrix3, vec3(0.1f, 5.0f, C_ROOM_SIZE));
     glUniform4f(spLambert->u("color"), 0.9, 0.9, 0.4, 1);
     glUniformMatrix4fv(spLambert->u("M"), 1, false, value_ptr(wallMatrix3));
     Models::cube.drawSolid();
 
-    mat4 wallMatrix4 = translate(initMatrix, vec3(-20,0,0));
-    wallMatrix4 = scale(wallMatrix4, vec3(0.1f, 5.0f, 20.0f));
+    mat4 wallMatrix4 = translate(initMatrix, vec3(-1 * C_ROOM_SIZE, 0, 0));
+    wallMatrix4 = scale(wallMatrix4, vec3(0.1f, 5.0f, C_ROOM_SIZE));
     glUniform4f(spLambert->u("color"), 0.2, 0.2, 0.4, 1);
     glUniformMatrix4fv(spLambert->u("M"), 1, false, value_ptr(wallMatrix4));
     Models::cube.drawSolid();
+
 }
 
 // returns matrix on the top of the table, at center point
