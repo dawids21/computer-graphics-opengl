@@ -20,10 +20,6 @@ void FishAnimator::addTime(double time) {
     this->time += time;
 }
 
-double FishAnimator::getTime() {
-    return this->time;
-}
-
 static float stepTime(float time, float startTime, float stepTime) {
     return std::min((time - startTime) / stepTime, 1.0f);
 }

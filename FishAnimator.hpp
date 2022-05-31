@@ -12,7 +12,6 @@ class FishAnimator {
     ~FishAnimator();
     void addTime(double time);
     void setTime(double time);
-    double getTime();
     glm::mat4 getAnimation(glm::mat4 initMatrix);
 };
 
