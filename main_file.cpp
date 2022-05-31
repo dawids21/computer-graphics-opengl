@@ -200,7 +200,7 @@ float stepTime(float time, float startTime, float stepTime) {
     return std::min((time - startTime) / stepTime, 1.0f);
 }
 
-glm::mat4 fish(glm::mat4 initMatrix, float angle) {
+glm::mat4 fish(glm::mat4 initMatrix) {
     using namespace glm;
 
     float currentTime = std::fmod(animationTime, 6.0f);
@@ -275,7 +275,7 @@ glm::mat4 fish(glm::mat4 initMatrix, float angle) {
 }
 
 // Drawing procedure
-void drawScene(GLFWwindow* window, float angle, float fishAngle) {
+void drawScene(GLFWwindow* window, float angle) {
     //************Place any code here that draws something inside the window******************l
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);  // Clear color and depth buffers
 
@@ -287,7 +287,7 @@ void drawScene(GLFWwindow* window, float angle, float fishAngle) {
 
     glm::mat4 tableMatrix = table(unitMatrix);
     glm::mat4 aquariumMatrix = aquariumNoDraw(tableMatrix);  // I have to draw the aquarium at the end because of the alpha channel
-    fish(aquariumMatrix, fishAngle);
+    fish(aquariumMatrix);
     aquariumDraw(aquariumMatrix);
 
     glfwSwapBuffers(window);  // Copy back buffer to the front buffer
@@ -323,9 +323,7 @@ int main(void) {
     initOpenGLProgram(window);  // Call initialization procedure
 
     // Main application loop
-    float angle = 0;                        // declare variable for storing current rotation angle
-    float fishAngle = 0;
-
+    float angle = 0;  // declare variable for storing current rotation angle
 
     float angle_y = 0;
     float angle_x = 0;
@@ -354,12 +352,11 @@ int main(void) {
         }
 
         angle += speed * time;  // Compute an angle by which the object was rotated during the previous frame
-        fishAngle += -PI * time;
         animationTime += animationSpeed * time;
 
         pos_prev = pos;
         glfwSetTime(0);                        // clear internal timer
-        drawScene(window, angle, fishAngle);   // Execute drawing procedure
+        drawScene(window, angle);              // Execute drawing procedure
         glfwPollEvents();                      // Process callback procedures corresponding to the events that took place up to now
     }
     freeOpenGLProgram(window);
