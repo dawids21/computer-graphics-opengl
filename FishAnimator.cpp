@@ -34,7 +34,6 @@ glm::mat4 FishAnimator::getAnimation1(glm::mat4 initMatrix) {
     int counter = 0;
 
     mat4 fishMatrix = initMatrix;
-    fishMatrix = translate(fishMatrix, vec3((C_AQUARIUM_WIDTH / 2.0f) - 0.3f, 0.0f, (-C_AQUARIUM_DEPTH / 2.0f) + 0.8f));
     fishMatrix = translate(fishMatrix, vec3(0.0f, 0.0f, (C_AQUARIUM_DEPTH - 1.6f) * stepTime(currentTime, steps[counter], stepTimes[counter])));
     counter++;
     if (currentTime > steps[counter]) {
