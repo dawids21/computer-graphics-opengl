@@ -185,7 +185,7 @@ glm::mat4 table(glm::mat4 initMatrix) {
 
     mat4 tableMatrix = legMatrix;
     tableMatrix = translate(tableMatrix, vec3(0.0f, C_TABLE_HEIGHT / 2.0f, 0.0f));
-    mat4 scaledTableMatrix = scale(tableMatrix, vec3((C_AQUARIUM_WIDTH / 2.0f) + 0.1f, 0.125f, (C_AQUARIUM_DEPTH / 2.0f) + 0.1f));
+    mat4 scaledTableMatrix = scale(tableMatrix, vec3((C_AQUARIUM_WIDTH / 2.0f) + 0.1f, 0.125f, (C_AQUARIUM_WIDTH / 2.0f) + 0.1f));
     glUniformMatrix4fv(spLambert->u("M"), 1, false, value_ptr(scaledTableMatrix));
     Models::cube.drawSolid();
 
@@ -200,7 +200,7 @@ glm::mat4 aquariumNoDraw(glm::mat4 initMatrix) {
 
 void aquariumDraw(glm::mat4 aquariumMatrix) {
     using namespace glm;
-    mat4 scaledAquariumMatrix = scale(aquariumMatrix, vec3(C_AQUARIUM_WIDTH / 2.0f, C_AQUARIUM_HEIGHT / 2.0f, C_AQUARIUM_DEPTH / 2.0f));
+    mat4 scaledAquariumMatrix = scale(aquariumMatrix, vec3(C_AQUARIUM_WIDTH / 2.0f, C_AQUARIUM_HEIGHT / 2.0f, C_AQUARIUM_WIDTH / 2.0f));
 
     activateLambertShader();
     glUniform4f(spLambert->u("color"), 0.5f, 1.0f, 1.0f, 0.3f);
@@ -233,7 +233,7 @@ void drawFish(FishType fishType, glm::mat4 matrix) {
 glm::mat4 fish(glm::mat4 initMatrix) {
     using namespace glm;
 
-    mat4 fishMatrix = translate(initMatrix, vec3((C_AQUARIUM_WIDTH / 2.0f) - 0.3f, 0.0f, (-C_AQUARIUM_DEPTH / 2.0f) + 0.8f));
+    mat4 fishMatrix = translate(initMatrix, vec3((C_AQUARIUM_WIDTH / 2.0f) - 0.3f, 0.0f, (-C_AQUARIUM_WIDTH / 2.0f) + 0.8f));
     fishMatrix = fishAnimator.getAnimation(FULL, fishMatrix);
     mat4 scaledFishMatrix = scale(fishMatrix, vec3(0.05f, 0.05f, 0.05f));
     drawFish(BLUE, scaledFishMatrix);
@@ -244,8 +244,8 @@ glm::mat4 fish(glm::mat4 initMatrix) {
 glm::mat4 fish1(glm::mat4 initMatrix) {
     using namespace glm;
 
-    mat4 fishMatrix = translate(initMatrix, vec3(0.0f, -0.6f, (-C_AQUARIUM_DEPTH / 2.0f) + 0.8f));
-    fishMatrix = fishAnimator.getAnimation(DEPTH, fishMatrix);
+    mat4 fishMatrix = translate(initMatrix, vec3(0.0f, -0.6f, (-C_AQUARIUM_WIDTH / 2.0f) + 0.8f));
+    fishMatrix = fishAnimator.getAnimation(WIDTH, fishMatrix);
     mat4 scaledFishMatrix = scale(fishMatrix, vec3(0.05f, 0.05f, 0.05f));
     drawFish(GOLD, scaledFishMatrix);
 
@@ -267,7 +267,7 @@ glm::mat4 fish2(glm::mat4 initMatrix) {
 glm::mat4 fish3(glm::mat4 initMatrix) {
     using namespace glm;
 
-    mat4 fishMatrix = translate(initMatrix, vec3((C_AQUARIUM_WIDTH / 2.0f) - 0.8f, 0.5f, (-C_AQUARIUM_DEPTH / 2.0f) + 1.2f));
+    mat4 fishMatrix = translate(initMatrix, vec3((C_AQUARIUM_WIDTH / 2.0f) - 0.8f, 0.5f, (-C_AQUARIUM_WIDTH / 2.0f) + 1.2f));
     fishMatrix = rotate(fishMatrix, -PI / 2, vec3(0.0f, 1.0f, 0.0f));
     fishMatrix = fishAnimator.getAnimation(WIDTH, fishMatrix);
     mat4 scaledFishMatrix = scale(fishMatrix, vec3(0.05f, 0.05f, 0.05f));
@@ -279,9 +279,9 @@ glm::mat4 fish3(glm::mat4 initMatrix) {
 glm::mat4 fish4(glm::mat4 initMatrix) {
     using namespace glm;
 
-    mat4 fishMatrix = translate(initMatrix, vec3((C_AQUARIUM_WIDTH / 2.0f) - 0.8f, 0.2f, (-C_AQUARIUM_DEPTH / 2.0f) + 1.2f));
+    mat4 fishMatrix = translate(initMatrix, vec3((C_AQUARIUM_WIDTH / 2.0f) - 0.8f, 0.2f, (-C_AQUARIUM_WIDTH / 2.0f) + 1.2f));
     fishMatrix = rotate(fishMatrix, -PI / 2, vec3(0.0f, 1.0f, 0.0f));
-    fishMatrix = fishAnimator.getAnimation(DEPTH, fishMatrix);
+    fishMatrix = fishAnimator.getAnimation(WIDTH, fishMatrix);
     mat4 scaledFishMatrix = scale(fishMatrix, vec3(0.05f, 0.05f, 0.05f));
     drawFish(TURKUS, scaledFishMatrix);
 
@@ -291,8 +291,8 @@ glm::mat4 fish4(glm::mat4 initMatrix) {
 glm::mat4 fish5(glm::mat4 initMatrix) {
     using namespace glm;
 
-    mat4 fishMatrix = translate(initMatrix, vec3((-C_AQUARIUM_WIDTH / 2.0f) + 1.2f, 0.3f, (-C_AQUARIUM_DEPTH / 2.0f) + 0.8f));
-    fishMatrix = fishAnimator.getAnimation(DEPTH, fishMatrix);
+    mat4 fishMatrix = translate(initMatrix, vec3((-C_AQUARIUM_WIDTH / 2.0f) + 1.2f, 0.3f, (-C_AQUARIUM_WIDTH / 2.0f) + 0.8f));
+    fishMatrix = fishAnimator.getAnimation(WIDTH, fishMatrix);
     mat4 scaledFishMatrix = scale(fishMatrix, vec3(0.02f, 0.02f, 0.02f));
     drawFish(YELLOW, scaledFishMatrix);
 
@@ -378,7 +378,7 @@ int main(void) {
 
         pos += ws * (float)time * mdir;
 
-        if (abs(pos.x) < C_AQUARIUM_WIDTH + 0.1f && abs(pos.z) < C_AQUARIUM_DEPTH + 0.1f) {
+        if (abs(pos.x) < C_AQUARIUM_WIDTH + 0.1f && abs(pos.z) < C_AQUARIUM_WIDTH + 0.1f) {
             pos = vec3(pos_prev.x, pos.y, pos_prev.z);
         }
 
