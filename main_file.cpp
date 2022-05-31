@@ -119,9 +119,9 @@ void activateLambertTexturedShader() {
 void floor(glm:: mat4 initMatrix){
 
     mat4 floorMatrix = translate(initMatrix, vec3(0,-2 * C_TABLE_HEIGHT, 0));
-    floorMatrix = scale(floorMatrix, vec3(20.0f, 0.1f, 20.0f));
-    glUniform4f(spLambert->u("color"), 0.5, 0.8, 0.4, 1);
-    glUniformMatrix4fv(spLambert->u("M"), 1, false, value_ptr(floorMatrix));
+    floorMatrix = scale(floorMatrix, vec3(C_ROOM_SIZE, 0.1f, C_ROOM_SIZE));
+    glUniform4f(spConstant->u("color"), 0.5, 0.8, 0.4, 1);
+    glUniformMatrix4fv(spConstant->u("M"), 1, false, value_ptr(floorMatrix));
     Models::cube.drawSolid();
 }
 
