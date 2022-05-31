@@ -5,7 +5,6 @@
 
 #define C_AQUARIUM_HEIGHT 2.0f
 #define C_AQUARIUM_WIDTH 4.0f
-#define C_AQUARIUM_DEPTH 4.0f
 
 #define C_PERSON_HEIGHT 1.5f
 

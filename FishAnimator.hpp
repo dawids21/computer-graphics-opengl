@@ -5,8 +5,7 @@
 
 enum AnimationType {
     FULL,
-    WIDTH,
-    DEPTH
+    WIDTH
 };
 
 class FishAnimator {
@@ -14,7 +13,6 @@ class FishAnimator {
     double time;
     glm::mat4 getAnimationFull(glm::mat4 initMatrix);
     glm::mat4 getAnimationWidth(glm::mat4 initMatrix);
-    glm::mat4 getAnimationDepth(glm::mat4 initMatrix);
 
    public:
     FishAnimator();
