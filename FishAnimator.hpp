@@ -13,6 +13,7 @@ class FishAnimator {
     void addTime(double time);
     void setTime(double time);
     glm::mat4 getAnimation1(glm::mat4 initMatrix);
+    glm::mat4 getAnimation2(glm::mat4 initMatrix);
 };
 
 #endif  // FISH_ANIMATOR_HPP
