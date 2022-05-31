@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <stdio.h>
 #include <stdlib.h>
 
+#include <cmath>
 #include <string>
 
 #include "FishLoader.hpp"
@@ -42,6 +43,9 @@ float speed = 0;  //[radians/s]
 float speed_y = 0; //[radiany/s]
 float speed_x = 0; //[radiany/s]
 float ws = 0;
+
+float animationSpeed = 1.0f;
+double animationTime = 0;
 
 vec3 pos = vec3(0, C_PERSON_HEIGHT, -5);
 vec3 pos_prev = vec3(0, C_PERSON_HEIGHT, -5);
@@ -192,11 +196,59 @@ void aquariumDraw(glm::mat4 aquariumMatrix) {
     Models::cube.drawSolid();
 }
 
+float stepTime(float time, float startTime, float stepTime) {
+    return std::min((time - startTime) / stepTime, 1.0f);
+}
+
 glm::mat4 fish(glm::mat4 initMatrix, float angle) {
     using namespace glm;
 
-    mat4 fishMatrix = rotate(initMatrix, angle, vec3(0.0f, 1.0f, 0.0f));
-    fishMatrix = translate(fishMatrix, vec3(0.5f, 0.0f, 0.0f));
+    float currentTime = std::fmod(animationTime, 6.0f);
+
+    float steps[] = {0.0f, 1.0f, 1.5f, 2.5f, 3.0f, 4.0f, 4.5f, 5.5f};
+    float stepTimes[] = {1.0f, 0.5f, 1.0f, 0.5f, 1.0f, 0.5f, 1.0f, 0.5f};
+    int counter = 0;
+
+    mat4 fishMatrix = initMatrix;
+    fishMatrix = translate(fishMatrix, vec3((C_AQUARIUM_WIDTH / 2.0f) - 0.3f, 0.0f, (-C_AQUARIUM_DEPTH / 2.0f) + 0.8f));
+    fishMatrix = translate(fishMatrix, vec3(0.0f, 0.0f, (C_AQUARIUM_DEPTH - 1.6f) * stepTime(currentTime, steps[counter], stepTimes[counter])));
+    counter++;
+    if (currentTime > steps[counter]) {
+        fishMatrix = translate(fishMatrix, vec3(-0.5f, 0.0f, 0.0f));
+        fishMatrix = rotate(fishMatrix, -PI / 2.0f * stepTime(currentTime, steps[counter], stepTimes[counter]), vec3(0.0f, 1.0f, 0.0f));
+        fishMatrix = translate(fishMatrix, vec3(0.5f, 0.0f, 0.0f));
+        counter++;
+    }
+    if (currentTime > steps[counter]) {
+        fishMatrix = translate(fishMatrix, vec3(0.0f, 0.0f, (C_AQUARIUM_WIDTH - 1.6f) * stepTime(currentTime, steps[counter], stepTimes[counter])));
+        counter++;
+    }
+    if (currentTime > steps[counter]) {
+        fishMatrix = translate(fishMatrix, vec3(-0.5f, 0.0f, 0.0f));
+        fishMatrix = rotate(fishMatrix, -PI / 2.0f * stepTime(currentTime, steps[counter], stepTimes[counter]), vec3(0.0f, 1.0f, 0.0f));
+        fishMatrix = translate(fishMatrix, vec3(0.5f, 0.0f, 0.0f));
+        counter++;
+    }
+    if (currentTime > steps[counter]) {
+        fishMatrix = translate(fishMatrix, vec3(0.0f, 0.0f, (C_AQUARIUM_DEPTH - 1.6f) * stepTime(currentTime, steps[counter], stepTimes[counter])));
+        counter++;
+    }
+    if (currentTime > steps[counter]) {
+        fishMatrix = translate(fishMatrix, vec3(-0.5f, 0.0f, 0.0f));
+        fishMatrix = rotate(fishMatrix, -PI / 2.0f * stepTime(currentTime, steps[counter], stepTimes[counter]), vec3(0.0f, 1.0f, 0.0f));
+        fishMatrix = translate(fishMatrix, vec3(0.5f, 0.0f, 0.0f));
+        counter++;
+    }
+    if (currentTime > steps[counter]) {
+        fishMatrix = translate(fishMatrix, vec3(0.0f, 0.0f, (C_AQUARIUM_WIDTH - 1.6f) * stepTime(currentTime, steps[counter], stepTimes[counter])));
+        counter++;
+    }
+    if (currentTime > steps[counter]) {
+        fishMatrix = translate(fishMatrix, vec3(-0.5f, 0.0f, 0.0f));
+        fishMatrix = rotate(fishMatrix, -PI / 2.0f * stepTime(currentTime, steps[counter], stepTimes[counter]), vec3(0.0f, 1.0f, 0.0f));
+        fishMatrix = translate(fishMatrix, vec3(0.5f, 0.0f, 0.0f));
+    }
+
     mat4 scaledFishMatrix = scale(fishMatrix, vec3(0.05f, 0.05f, 0.05f));
 
     Fish fish = fishLoader.getFish(BLUE);
@@ -303,7 +355,7 @@ int main(void) {
 
         angle += speed * time;  // Compute an angle by which the object was rotated during the previous frame
         fishAngle += -PI * time;
-
+        animationTime += animationSpeed * time;
 
         pos_prev = pos;
         glfwSetTime(0);                        // clear internal timer
