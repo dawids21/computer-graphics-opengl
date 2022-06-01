@@ -14,7 +14,7 @@ ObjLoader::ObjLoader() {
 ObjLoader::~ObjLoader() {
 }
 
-void ObjLoader::load(std::string filename, std::string path) {
+size_t ObjLoader::load(std::string filename, std::string path) {
     this->vertices.clear();
     this->normals.clear();
     this->texcoords.clear();
@@ -80,6 +80,7 @@ void ObjLoader::load(std::string filename, std::string path) {
             index_offset += fv;
         }
     }
+    return shapes.size();
 }
 
 std::vector<float> ObjLoader::getVertices() {

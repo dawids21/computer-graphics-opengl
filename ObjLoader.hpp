@@ -15,7 +15,7 @@ class ObjLoader {
    public:
     ObjLoader();
     ~ObjLoader();
-    void load(std::string filename, std::string path);
+    size_t load(std::string filename, std::string path);
     std::vector<float> getVertices();
     std::vector<float> getNormals();
     std::vector<float> getTextcoords();
