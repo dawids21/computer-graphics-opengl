@@ -264,6 +264,21 @@ void drawFish(glm::mat4 aquariumMatrix) {
         CORAL,
         0.5f,
         FULL_REVERSE);
+    drawSingleFish(
+        rotate(translate(aquariumMatrix, vec3((-C_AQUARIUM_WIDTH / 2.0f) + 0.3f, 0.5f, (-C_AQUARIUM_WIDTH / 2.0f) + 1.0f)), PI / 4, vec3(0.0f, 1.0f, 0.0f)),
+        BLUE,
+        0.05f,
+        DIAGONAL_REVERSE);
+    drawSingleFish(
+        translate(aquariumMatrix, vec3((C_AQUARIUM_WIDTH / 2.0f) - 1.5f, -0.5f, (-C_AQUARIUM_WIDTH / 2.0f) + 0.8f)),
+        BOESEMANI,
+        0.05f,
+        WIDTH_REVERSE);
+    drawSingleFish(
+        rotate(translate(aquariumMatrix, vec3((-C_AQUARIUM_WIDTH / 2.0f) + 0.8f, -0.6f, (-C_AQUARIUM_WIDTH / 2.0f) + 1.4f)), PI / 2, vec3(0.0f, 1.0f, 0.0f)),
+        TURKUS,
+        0.05f,
+        WIDTH_REVERSE);
 }
 
 // Drawing procedure
