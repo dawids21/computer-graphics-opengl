@@ -8,24 +8,6 @@
 
 using namespace std;
 
-struct Loaded {
-    float x;
-    float y;
-    float z;
-};
-
-struct Coord {
-    int x;
-    int y;
-    int z;
-};
-
-struct Triangle {
-    struct Coord vertex;
-    struct Coord normal;
-    struct Coord texture;
-};
-
 ObjLoader::ObjLoader() {
 }
 
@@ -57,76 +39,46 @@ void ObjLoader::load(std::string filename, std::string path) {
     auto& shapes = reader.GetShapes();
     auto& materials = reader.GetMaterials();
 
-    std::vector<struct Loaded> vertices;
-    std::vector<struct Loaded> normals;
-    std::vector<struct Loaded> texcoords;
+    // Loop over shapes
+    for (size_t s = 0; s < shapes.size(); s++) {
+        // Loop over faces(polygon)
+        size_t index_offset = 0;
+        for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++) {
+            size_t fv = size_t(shapes[s].mesh.num_face_vertices[f]);
 
-    for (size_t i = 0; i < attrib.vertices.size(); i += 3) {
-        vertices.push_back({attrib.vertices[i],
-                            attrib.vertices[i + 1],
-                            attrib.vertices[i + 2]});
-    }
-    for (size_t i = 0; i < attrib.normals.size(); i += 3) {
-        normals.push_back({attrib.normals[i],
-                           attrib.normals[i + 1],
-                           attrib.normals[i + 2]});
-    }
-    for (size_t i = 0; i < attrib.texcoords.size(); i += 2) {
-        texcoords.push_back({attrib.texcoords[i],
-                             attrib.texcoords[i + 1],
-                             0});
-    }
+            // Loop over vertices in the face.
+            for (size_t v = 0; v < fv; v++) {
+                // access to vertex
+                tinyobj::index_t idx = shapes[s].mesh.indices[index_offset + v];
+                tinyobj::real_t vx = attrib.vertices[3 * size_t(idx.vertex_index) + 0];
+                tinyobj::real_t vy = attrib.vertices[3 * size_t(idx.vertex_index) + 1];
+                tinyobj::real_t vz = attrib.vertices[3 * size_t(idx.vertex_index) + 2];
+                this->vertices.push_back(vx);
+                this->vertices.push_back(vy);
+                this->vertices.push_back(vz);
+                this->vertices.push_back(1.0f);
 
-    std::vector<struct Triangle> triangles;
+                // Check if `normal_index` is zero or positive. negative = no normal data
+                if (idx.normal_index >= 0) {
+                    tinyobj::real_t nx = attrib.normals[3 * size_t(idx.normal_index) + 0];
+                    tinyobj::real_t ny = attrib.normals[3 * size_t(idx.normal_index) + 1];
+                    tinyobj::real_t nz = attrib.normals[3 * size_t(idx.normal_index) + 2];
+                    this->normals.push_back(nx);
+                    this->normals.push_back(ny);
+                    this->normals.push_back(nz);
+                    this->normals.push_back(0.0f);
+                }
 
-    for (auto shape = shapes.begin(); shape < shapes.end(); ++shape) {
-        const std::vector<tinyobj::index_t>& indices = shape->mesh.indices;
-        const std::vector<int>& material_ids = shape->mesh.material_ids;
-
-        for (size_t index = 0; index < material_ids.size(); ++index) {
-            // offset by 3 because values are grouped as vertex/normal/texture
-            triangles.push_back({{indices[4 * index].vertex_index, indices[4 * index + 1].vertex_index, indices[4 * index + 2].vertex_index},
-                                 {indices[4 * index].normal_index, indices[4 * index + 1].normal_index, indices[4 * index + 2].normal_index},
-                                 {indices[4 * index].texcoord_index, indices[4 * index + 1].texcoord_index, indices[4 * index + 2].texcoord_index}});
-            triangles.push_back({{indices[4 * index].vertex_index, indices[4 * index + 2].vertex_index, indices[4 * index + 3].vertex_index},
-                                 {indices[4 * index].normal_index, indices[4 * index + 2].normal_index, indices[4 * index + 3].normal_index},
-                                 {indices[4 * index].texcoord_index, indices[4 * index + 2].texcoord_index, indices[4 * index + 3].texcoord_index}});
+                // Check if `texcoord_index` is zero or positive. negative = no texcoord data
+                if (idx.texcoord_index >= 0) {
+                    tinyobj::real_t tx = attrib.texcoords[2 * size_t(idx.texcoord_index) + 0];
+                    tinyobj::real_t ty = attrib.texcoords[2 * size_t(idx.texcoord_index) + 1];
+                    this->texcoords.push_back(tx);
+                    this->texcoords.push_back(ty);
+                }
+            }
+            index_offset += fv;
         }
-    }
-
-    for (size_t i = 0; i < triangles.size(); i++) {
-        this->vertices.push_back(vertices[triangles[i].vertex.x].x);
-        this->vertices.push_back(vertices[triangles[i].vertex.x].y);
-        this->vertices.push_back(vertices[triangles[i].vertex.x].z);
-        this->vertices.push_back(1.0f);
-        this->vertices.push_back(vertices[triangles[i].vertex.y].x);
-        this->vertices.push_back(vertices[triangles[i].vertex.y].y);
-        this->vertices.push_back(vertices[triangles[i].vertex.y].z);
-        this->vertices.push_back(1.0f);
-        this->vertices.push_back(vertices[triangles[i].vertex.z].x);
-        this->vertices.push_back(vertices[triangles[i].vertex.z].y);
-        this->vertices.push_back(vertices[triangles[i].vertex.z].z);
-        this->vertices.push_back(1.0f);
-
-        this->normals.push_back(normals[triangles[i].normal.x].x);
-        this->normals.push_back(normals[triangles[i].normal.x].y);
-        this->normals.push_back(normals[triangles[i].normal.x].z);
-        this->normals.push_back(0.0f);
-        this->normals.push_back(normals[triangles[i].normal.y].x);
-        this->normals.push_back(normals[triangles[i].normal.y].y);
-        this->normals.push_back(normals[triangles[i].normal.y].z);
-        this->normals.push_back(0.0f);
-        this->normals.push_back(normals[triangles[i].normal.z].x);
-        this->normals.push_back(normals[triangles[i].normal.z].y);
-        this->normals.push_back(normals[triangles[i].normal.z].z);
-        this->normals.push_back(0.0f);
-
-        this->texcoords.push_back(texcoords[triangles[i].texture.x].x);
-        this->texcoords.push_back(texcoords[triangles[i].texture.x].y);
-        this->texcoords.push_back(texcoords[triangles[i].texture.y].x);
-        this->texcoords.push_back(texcoords[triangles[i].texture.y].y);
-        this->texcoords.push_back(texcoords[triangles[i].texture.z].x);
-        this->texcoords.push_back(texcoords[triangles[i].texture.z].y);
     }
 }
 
