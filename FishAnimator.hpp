@@ -6,7 +6,10 @@
 enum AnimationType {
     FULL,
     WIDTH,
-    DIAGONAL
+    DIAGONAL,
+    FULL_REVERSE,
+    WIDTH_REVERSE,
+    DIAGONAL_REVERSE
 };
 
 class FishAnimator {
@@ -15,6 +18,9 @@ class FishAnimator {
     glm::mat4 getAnimationFull(glm::mat4 initMatrix);
     glm::mat4 getAnimationWidth(glm::mat4 initMatrix);
     glm::mat4 getAnimationDiagonal(glm::mat4 initMatrix);
+    glm::mat4 getAnimationFullReverse(glm::mat4 initMatrix);
+    glm::mat4 getAnimationWidthReverse(glm::mat4 initMatrix);
+    glm::mat4 getAnimationDiagonalReverse(glm::mat4 initMatrix);
 
    public:
     FishAnimator();
