@@ -195,11 +195,15 @@ void aquariumDraw(glm::mat4 aquariumMatrix) {
     Models::cube.drawSolid();
 }
 
-void drawFish(FishType fishType, glm::mat4 matrix) {
+glm::mat4 drawSingleFish(glm::mat4 position, FishType fishType, float scaleFactor, AnimationType animationType) {
+    using namespace glm;
+
+    mat4 fishMatrix = fishAnimator.getAnimation(animationType, position);
+    mat4 scaledFishMatrix = scale(fishMatrix, vec3(scaleFactor));
     Fish fish = fishLoader.getFish(fishType);
 
     activateLambertTexturedShader();
-    glUniformMatrix4fv(spLambertTextured->u("M"), 1, false, value_ptr(matrix));
+    glUniformMatrix4fv(spLambertTextured->u("M"), 1, false, value_ptr(scaledFishMatrix));
 
     glEnableVertexAttribArray(spLambertTextured->a("vertex"));
     glVertexAttribPointer(spLambertTextured->a("vertex"), 4, GL_FLOAT, false, 0, &fish.vertex[0]);
@@ -215,75 +219,51 @@ void drawFish(FishType fishType, glm::mat4 matrix) {
     glDisableVertexAttribArray(spLambertTextured->a("vertex"));
     glDisableVertexAttribArray(spLambertTextured->a("normal"));
     glDisableVertexAttribArray(spLambertTextured->a("texCoord"));
-}
-
-glm::mat4 fish(glm::mat4 initMatrix) {
-    using namespace glm;
-
-    mat4 fishMatrix = translate(initMatrix, vec3((C_AQUARIUM_WIDTH / 2.0f) - 0.3f, 0.0f, (-C_AQUARIUM_WIDTH / 2.0f) + 0.8f));
-    fishMatrix = fishAnimator.getAnimation(FULL, fishMatrix);
-    mat4 scaledFishMatrix = scale(fishMatrix, vec3(0.05f, 0.05f, 0.05f));
-    drawFish(BLUE, scaledFishMatrix);
 
     return fishMatrix;
 }
 
-glm::mat4 fish1(glm::mat4 initMatrix) {
-    using namespace glm;
-
-    mat4 fishMatrix = translate(initMatrix, vec3(0.0f, -0.6f, (-C_AQUARIUM_WIDTH / 2.0f) + 0.8f));
-    fishMatrix = fishAnimator.getAnimation(WIDTH, fishMatrix);
-    mat4 scaledFishMatrix = scale(fishMatrix, vec3(0.05f, 0.05f, 0.05f));
-    drawFish(GOLD, scaledFishMatrix);
-
-    return fishMatrix;
-}
-
-glm::mat4 fish2(glm::mat4 initMatrix) {
-    using namespace glm;
-
-    mat4 fishMatrix = translate(initMatrix, vec3((C_AQUARIUM_WIDTH / 2.0f) - 0.8f, 0.2f, 0.0f));
-    fishMatrix = rotate(fishMatrix, -PI / 2, vec3(0.0f, 1.0f, 0.0f));
-    fishMatrix = fishAnimator.getAnimation(WIDTH, fishMatrix);
-    mat4 scaledFishMatrix = scale(fishMatrix, vec3(0.05f, 0.05f, 0.05f));
-    drawFish(SOLON, scaledFishMatrix);
-
-    return fishMatrix;
-}
-
-glm::mat4 fish3(glm::mat4 initMatrix) {
-    using namespace glm;
-
-    mat4 fishMatrix = translate(initMatrix, vec3((C_AQUARIUM_WIDTH / 2.0f) - 0.3f, 0.0f, (-C_AQUARIUM_WIDTH / 2.0f) + 1.0f));
-    fishMatrix = rotate(fishMatrix, -PI / 4, vec3(0.0f, 1.0f, 0.0f));
-    fishMatrix = fishAnimator.getAnimation(DIAGONAL, fishMatrix);
-    mat4 scaledFishMatrix = scale(fishMatrix, vec3(0.05f, 0.05f, 0.05f));
-    drawFish(BOESEMANI, scaledFishMatrix);
-
-    return fishMatrix;
-}
-
-glm::mat4 fish4(glm::mat4 initMatrix) {
-    using namespace glm;
-
-    mat4 fishMatrix = translate(initMatrix, vec3((C_AQUARIUM_WIDTH / 2.0f) - 0.8f, 0.2f, (-C_AQUARIUM_WIDTH / 2.0f) + 1.2f));
-    fishMatrix = rotate(fishMatrix, -PI / 2, vec3(0.0f, 1.0f, 0.0f));
-    fishMatrix = fishAnimator.getAnimation(WIDTH, fishMatrix);
-    mat4 scaledFishMatrix = scale(fishMatrix, vec3(0.05f, 0.05f, 0.05f));
-    drawFish(TURKUS, scaledFishMatrix);
-
-    return fishMatrix;
-}
-
-glm::mat4 fish5(glm::mat4 initMatrix) {
-    using namespace glm;
-
-    mat4 fishMatrix = translate(initMatrix, vec3((-C_AQUARIUM_WIDTH / 2.0f) + 1.2f, 0.3f, (-C_AQUARIUM_WIDTH / 2.0f) + 0.8f));
-    fishMatrix = fishAnimator.getAnimation(WIDTH, fishMatrix);
-    mat4 scaledFishMatrix = scale(fishMatrix, vec3(0.02f, 0.02f, 0.02f));
-    drawFish(YELLOW, scaledFishMatrix);
-
-    return fishMatrix;
+void drawFish(glm::mat4 aquariumMatrix) {
+    drawSingleFish(
+        translate(aquariumMatrix, vec3((C_AQUARIUM_WIDTH / 2.0f) - 0.3f, 0.0f, (-C_AQUARIUM_WIDTH / 2.0f) + 0.8f)),
+        BLUE,
+        0.05f,
+        FULL);
+    drawSingleFish(
+        translate(aquariumMatrix, vec3(0.0f, -0.6f, (-C_AQUARIUM_WIDTH / 2.0f) + 0.8f)),
+        GOLD,
+        0.05f,
+        WIDTH);
+    drawSingleFish(
+        rotate(translate(aquariumMatrix, vec3((C_AQUARIUM_WIDTH / 2.0f) - 0.8f, 0.2f, 0.0f)), -PI / 2, vec3(0.0f, 1.0f, 0.0f)),
+        SOLON,
+        0.05f,
+        WIDTH);
+    drawSingleFish(
+        rotate(translate(aquariumMatrix, vec3((C_AQUARIUM_WIDTH / 2.0f) - 0.3f, 0.0f, (-C_AQUARIUM_WIDTH / 2.0f) + 1.0f)), -PI / 4, vec3(0.0f, 1.0f, 0.0f)),
+        BOESEMANI,
+        0.05f,
+        DIAGONAL);
+    drawSingleFish(
+        rotate(translate(aquariumMatrix, vec3((C_AQUARIUM_WIDTH / 2.0f) - 0.8f, 0.2f, (-C_AQUARIUM_WIDTH / 2.0f) + 1.2f)), -PI / 2, vec3(0.0f, 1.0f, 0.0f)),
+        TURKUS,
+        0.05f,
+        WIDTH);
+    drawSingleFish(
+        translate(aquariumMatrix, vec3((-C_AQUARIUM_WIDTH / 2.0f) + 1.2f, 0.3f, (-C_AQUARIUM_WIDTH / 2.0f) + 0.8f)),
+        YELLOW,
+        0.02f,
+        WIDTH);
+    drawSingleFish(
+        rotate(translate(aquariumMatrix, vec3((-C_AQUARIUM_WIDTH / 2.0f) + 1.0f, 0.3f, (C_AQUARIUM_WIDTH / 2.0f) - 0.3f)), 3 * PI / 4, vec3(0.0f, 1.0f, 0.0f)),
+        CORAL,
+        0.5f,
+        DIAGONAL_REVERSE);
+    drawSingleFish(
+        rotate(translate(aquariumMatrix, vec3((C_AQUARIUM_WIDTH / 2.0f) - 0.3f, -0.2f, (C_AQUARIUM_WIDTH / 2.0f) - 0.8f)), PI, vec3(0.0f, 1.0f, 0.0f)),
+        CORAL,
+        0.5f,
+        FULL_REVERSE);
 }
 
 // Drawing procedure
@@ -299,12 +279,7 @@ void drawScene(GLFWwindow* window, float angle) {
 
     glm::mat4 tableMatrix = table(unitMatrix);
     glm::mat4 aquariumMatrix = aquariumNoDraw(tableMatrix);  // I have to draw the aquarium at the end because of the alpha channel
-    fish(aquariumMatrix);
-    fish1(aquariumMatrix);
-    fish2(aquariumMatrix);
-    fish3(aquariumMatrix);
-    fish4(aquariumMatrix);
-    fish5(aquariumMatrix);
+    drawFish(aquariumMatrix);
     aquariumDraw(aquariumMatrix);
 
     glfwSwapBuffers(window);  // Copy back buffer to the front buffer
