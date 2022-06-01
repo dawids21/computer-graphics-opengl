@@ -10,6 +10,6 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.500000
 d 1.000000
 illum 2
-map_Bump /home/dawid/Desktop/Documents/Projects/CGV/try-models/models/fish copy/turkus/13004_Bicolor_Blenny_v1_bump.png
-map_Kd /home/dawid/Desktop/Documents/Projects/CGV/try-models/models/fish copy/turkus/13004_Bicolor_Blenny_v1_diff.png
-map_Ks /home/dawid/Desktop/Documents/Projects/CGV/try-models/models/fish copy/turkus/13004_Bicolor_Blenny_v1_spec.png
+map_Bump 13004_Bicolor_Blenny_v1_bump.png
+map_Kd 13004_Bicolor_Blenny_v1_diff.png
+map_Ks 13004_Bicolor_Blenny_v1_spec.png
