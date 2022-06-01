@@ -101,6 +101,17 @@ void freeOpenGLProgram(GLFWwindow* window) {
     //************Place any code here that needs to be executed once, after the main loop ends************
 }
 
+
+void activateConstantShader() {
+    glm::mat4 P = glm::perspective(glm::radians(50.0f), 1.0f, 1.0f, 50.0f);
+    glm::mat4 V = glm::lookAt(pos, pos + dir, glm::vec3(0.0f, 1.0f, 0.0f));
+
+    spConstant->use();
+    glUniformMatrix4fv(spConstant->u("P"), 1, false, glm::value_ptr(P));
+    glUniformMatrix4fv(spConstant->u("V"), 1, false, glm::value_ptr(V));
+}
+
+
 void activateLambertShader() {
     glm::mat4 P = glm::perspective(glm::radians(50.0f), 1.0f, 1.0f, 50.0f);
     glm::mat4 V = glm::lookAt(pos, pos + dir, glm::vec3(0.0f, 1.0f, 0.0f));
@@ -121,17 +132,19 @@ void activateLambertTexturedShader() {
 
 void floor(glm:: mat4 initMatrix){
 
+    activateConstantShader();
+
     mat4 floorMatrix = translate(initMatrix, vec3(0,-2 * C_TABLE_HEIGHT, 0));
     floorMatrix = scale(floorMatrix, vec3(C_ROOM_SIZE, 0.1f, C_ROOM_SIZE));
-    glUniform4f(spConstant->u("color"), 0.5, 0.8, 0.4, 1);
+    glUniform4f(spConstant->u("color"), 0.5, 0.5, 0.5, 1);
     glUniformMatrix4fv(spConstant->u("M"), 1, false, value_ptr(floorMatrix));
     Models::cube.drawSolid();
 }
 
 void walls(glm:: mat4 initMatrix){
 
-    
-    
+    activateConstantShader();
+
     mat4 wallMatrix1 = translate(initMatrix, vec3(0, 0, C_ROOM_SIZE));
     wallMatrix1 = scale(wallMatrix1, vec3(C_ROOM_SIZE, 5.0f, 0.1f));
     glUniform4f(spLambert->u("color"), 0.2, 0.6, 0.4, 1);
