@@ -18,6 +18,7 @@ size_t ObjLoader::load(std::string filename, std::string path) {
     this->vertices.clear();
     this->normals.clear();
     this->texcoords.clear();
+    this->models.clear();
 
     tinyobj::ObjReaderConfig reader_config;
     reader_config.mtl_search_path = path;  // Path to material files
@@ -82,6 +83,20 @@ size_t ObjLoader::load(std::string filename, std::string path) {
             }
             index_offset += fv;
         }
+        ObjModel model;
+        model.vertices = vertices;
+        model.normals = normals;
+        model.texcoords = texcoords;
+        model.ambient = {materials[s].ambient[0], materials[s].ambient[1], materials[s].ambient[2]};
+        model.diffuse = {materials[s].diffuse[0], materials[s].diffuse[1], materials[s].diffuse[2]};
+        model.specular = {materials[s].specular[0], materials[s].specular[1], materials[s].specular[2]};
+        if (materials[s].diffuse_texname == "") {
+            model.texture = {false, ""};
+        } else {
+            model.texture = {true, path + materials[s].diffuse_texname};
+        }
+        model.shininess = materials[s].shininess;
+        this->models.push_back(model);
 
         this->vertices.push_back(vertices);
         this->normals.push_back(normals);
@@ -100,4 +115,8 @@ std::vector<float> ObjLoader::getNormals(size_t i) {
 
 std::vector<float> ObjLoader::getTextcoords(size_t i) {
     return this->texcoords[i];
+}
+
+std::vector<ObjModel> ObjLoader::get() {
+    return this->models;
 }
