@@ -41,6 +41,9 @@ size_t ObjLoader::load(std::string filename, std::string path) {
 
     // Loop over shapes
     for (size_t s = 0; s < shapes.size(); s++) {
+        vector<float> vertices;
+        vector<float> normals;
+        vector<float> texcoords;
         // Loop over faces(polygon)
         size_t index_offset = 0;
         for (size_t f = 0; f < shapes[s].mesh.num_face_vertices.size(); f++) {
@@ -53,44 +56,48 @@ size_t ObjLoader::load(std::string filename, std::string path) {
                 tinyobj::real_t vx = attrib.vertices[3 * size_t(idx.vertex_index) + 0];
                 tinyobj::real_t vy = attrib.vertices[3 * size_t(idx.vertex_index) + 1];
                 tinyobj::real_t vz = attrib.vertices[3 * size_t(idx.vertex_index) + 2];
-                this->vertices.push_back(vx);
-                this->vertices.push_back(vy);
-                this->vertices.push_back(vz);
-                this->vertices.push_back(1.0f);
+                vertices.push_back(vx);
+                vertices.push_back(vy);
+                vertices.push_back(vz);
+                vertices.push_back(1.0f);
 
                 // Check if `normal_index` is zero or positive. negative = no normal data
                 if (idx.normal_index >= 0) {
                     tinyobj::real_t nx = attrib.normals[3 * size_t(idx.normal_index) + 0];
                     tinyobj::real_t ny = attrib.normals[3 * size_t(idx.normal_index) + 1];
                     tinyobj::real_t nz = attrib.normals[3 * size_t(idx.normal_index) + 2];
-                    this->normals.push_back(nx);
-                    this->normals.push_back(ny);
-                    this->normals.push_back(nz);
-                    this->normals.push_back(0.0f);
+                    normals.push_back(nx);
+                    normals.push_back(ny);
+                    normals.push_back(nz);
+                    normals.push_back(0.0f);
                 }
 
                 // Check if `texcoord_index` is zero or positive. negative = no texcoord data
                 if (idx.texcoord_index >= 0) {
                     tinyobj::real_t tx = attrib.texcoords[2 * size_t(idx.texcoord_index) + 0];
                     tinyobj::real_t ty = attrib.texcoords[2 * size_t(idx.texcoord_index) + 1];
-                    this->texcoords.push_back(tx);
-                    this->texcoords.push_back(ty);
+                    texcoords.push_back(tx);
+                    texcoords.push_back(ty);
                 }
             }
             index_offset += fv;
         }
+
+        this->vertices.push_back(vertices);
+        this->normals.push_back(normals);
+        this->texcoords.push_back(texcoords);
     }
     return shapes.size();
 }
 
-std::vector<float> ObjLoader::getVertices() {
-    return this->vertices;
+std::vector<float> ObjLoader::getVertices(size_t i) {
+    return this->vertices[i];
 }
 
-std::vector<float> ObjLoader::getNormals() {
-    return this->normals;
+std::vector<float> ObjLoader::getNormals(size_t i) {
+    return this->normals[i];
 }
 
-std::vector<float> ObjLoader::getTextcoords() {
-    return this->texcoords;
+std::vector<float> ObjLoader::getTextcoords(size_t i) {
+    return this->texcoords[i];
 }
