@@ -32,7 +32,12 @@ struct ObjModel {
     RGB ambient;
     RGB diffuse;
     RGB specular;
+    float dissolve;
     float shininess;
+
+    bool operator<(const ObjModel& str) const {
+        return (dissolve < str.dissolve);
+    }
 };
 
 typedef struct ObjModel ObjModel;

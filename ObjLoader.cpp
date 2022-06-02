@@ -87,17 +87,18 @@ size_t ObjLoader::load(std::string filename, std::string path) {
         model.vertices = vertices;
         model.normals = normals;
         model.texcoords = texcoords;
-        model.ambient = {materials[s].ambient[0], materials[s].ambient[1], materials[s].ambient[2]};
-        model.diffuse = {materials[s].diffuse[0], materials[s].diffuse[1], materials[s].diffuse[2]};
-        model.specular = {materials[s].specular[0], materials[s].specular[1], materials[s].specular[2]};
-        if (materials[s].diffuse_texname == "") {
+        model.ambient = {materials[shapes[s].mesh.material_ids[0]].ambient[0], materials[shapes[s].mesh.material_ids[0]].ambient[1], materials[shapes[s].mesh.material_ids[0]].ambient[2]};
+        model.diffuse = {materials[shapes[s].mesh.material_ids[0]].diffuse[0], materials[shapes[s].mesh.material_ids[0]].diffuse[1], materials[shapes[s].mesh.material_ids[0]].diffuse[2]};
+        model.specular = {materials[shapes[s].mesh.material_ids[0]].specular[0], materials[shapes[s].mesh.material_ids[0]].specular[1], materials[shapes[s].mesh.material_ids[0]].specular[2]};
+        if (materials[shapes[s].mesh.material_ids[0]].diffuse_texname == "") {
             model.texture = 0;
             model.textureAvailable = false;
         } else {
-            model.texture = textureLoader.load(path + "/" + materials[s].diffuse_texname);
+            model.texture = textureLoader.load(path + "/" + materials[shapes[s].mesh.material_ids[0]].diffuse_texname);
             model.textureAvailable = true;
         }
-        model.shininess = materials[s].shininess;
+        model.dissolve = materials[shapes[s].mesh.material_ids[0]].dissolve;
+        model.shininess = materials[shapes[s].mesh.material_ids[0]].shininess;
         this->models.push_back(model);
     }
     return shapes.size();
