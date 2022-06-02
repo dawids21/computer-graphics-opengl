@@ -239,7 +239,7 @@ glm::mat4 drawSingleFish(glm::mat4 position, FishType fishType, float scaleFacto
 glm::mat4 newAquariumDraw(glm::mat4 matrix) {
     using namespace glm;
 
-    mat4 m = scale(matrix, vec3(0.04f));
+    mat4 m = scale(matrix, vec3(0.03f));
 
     activateLambertShader();
     glUniformMatrix4fv(spLambert->u("M"), 1, false, value_ptr(m));
