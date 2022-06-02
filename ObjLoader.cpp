@@ -4,6 +4,7 @@
 
 #define TINYOBJLOADER_IMPLEMENTATION
 
+#include "TextureLoader.hpp"
 #include "tiny_obj_loader.h"
 
 using namespace std;
@@ -24,6 +25,8 @@ size_t ObjLoader::load(std::string filename, std::string path) {
     reader_config.mtl_search_path = path;  // Path to material files
     reader_config.triangulate = false;
     tinyobj::ObjReader reader;
+
+    TextureLoader textureLoader;
 
     if (!reader.ParseFromFile(filename, reader_config)) {
         if (!reader.Error().empty()) {
@@ -91,9 +94,11 @@ size_t ObjLoader::load(std::string filename, std::string path) {
         model.diffuse = {materials[s].diffuse[0], materials[s].diffuse[1], materials[s].diffuse[2]};
         model.specular = {materials[s].specular[0], materials[s].specular[1], materials[s].specular[2]};
         if (materials[s].diffuse_texname == "") {
-            model.texture = {false, ""};
+            model.texture = 0;
+            model.textureAvailable = false;
         } else {
-            model.texture = {true, path + materials[s].diffuse_texname};
+            model.texture = textureLoader.load(path + materials[s].diffuse_texname);
+            model.textureAvailable = false;
         }
         model.shininess = materials[s].shininess;
         this->models.push_back(model);

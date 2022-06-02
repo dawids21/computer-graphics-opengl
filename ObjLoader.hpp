@@ -2,9 +2,11 @@
 #define OBJ_LOADER
 
 #include <stdlib.h>
-#include <string>
 
+#include <string>
 #include <vector>
+
+#include "GL/glew.h"
 
 struct RGB {
     float r;
@@ -25,7 +27,8 @@ struct ObjModel {
     std::vector<float> vertices;
     std::vector<float> normals;
     std::vector<float> texcoords;
-    TexName texture;
+    GLuint texture;
+    bool textureAvailable;
     RGB ambient;
     RGB diffuse;
     RGB specular;
