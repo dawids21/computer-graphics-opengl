@@ -256,7 +256,7 @@ glm::mat4 newAquariumDraw(glm::mat4 matrix) {
     M = scale(M, vec3(0.01f));
 
     activateLambertShader();
-    glUniform4f(spLambert->u("color"), 1.0f, 1.0f, 1.0f, 1.0f);
+    glUniform4f(spLambert->u("color"), 0.5f, 1.0f, 1.0f, 0.3f);
     glUniformMatrix4fv(spLambertTextured->u("M"), 1, false, value_ptr(M));
 
     for (int i = 0; i < aquariumVertices.size(); i++) {
