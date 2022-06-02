@@ -14,6 +14,7 @@ class TextureLoader {
     TextureLoader();
     ~TextureLoader();
     int loadTexture(std::string filename);
+    GLuint load(std::string filename);
     GLuint getTexture(int id);
 };
 
