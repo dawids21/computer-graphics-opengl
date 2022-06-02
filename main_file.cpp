@@ -204,16 +204,6 @@ glm::mat4 aquariumNoDraw(glm::mat4 initMatrix) {
     return translate(initMatrix, vec3(0.0f, C_AQUARIUM_HEIGHT / 2.0f, 0.0f));
 }
 
-void aquariumDraw(glm::mat4 aquariumMatrix) {
-    using namespace glm;
-    mat4 scaledAquariumMatrix = scale(aquariumMatrix, vec3(C_AQUARIUM_WIDTH / 2.0f, C_AQUARIUM_HEIGHT / 2.0f, C_AQUARIUM_WIDTH / 2.0f));
-
-    activateLambertShader();
-    glUniform4f(spLambert->u("color"), 0.5f, 1.0f, 1.0f, 0.3f);
-    glUniformMatrix4fv(spLambert->u("M"), 1, false, value_ptr(scaledAquariumMatrix));
-    Models::cube.drawSolid();
-}
-
 glm::mat4 drawSingleFish(glm::mat4 position, FishType fishType, float scaleFactor, AnimationType animationType) {
     using namespace glm;
 
@@ -249,11 +239,10 @@ glm::mat4 drawSingleFish(glm::mat4 position, FishType fishType, float scaleFacto
 glm::mat4 newAquariumDraw(glm::mat4 matrix) {
     using namespace glm;
 
-    mat4 M = translate(matrix, vec3(5.0f, 0.0f, -3.0f));
-    M = scale(M, vec3(0.01f));
+    mat4 m = scale(matrix, vec3(0.04f));
 
     activateLambertShader();
-    glUniformMatrix4fv(spLambert->u("M"), 1, false, value_ptr(M));
+    glUniformMatrix4fv(spLambert->u("M"), 1, false, value_ptr(m));
 
     for (int i = aquariumModel.size() - 1; i >= 0; i--) {
         RGB color = aquariumModel[i].diffuse;
@@ -349,8 +338,7 @@ void drawScene(GLFWwindow* window, float angle) {
     glm::mat4 tableMatrix = table(unitMatrix);
     glm::mat4 aquariumMatrix = aquariumNoDraw(tableMatrix);  // I have to draw the aquarium at the end because of the alpha channel
     drawFish(aquariumMatrix);
-    newAquariumDraw(aquariumMatrix);
-    aquariumDraw(aquariumMatrix);
+    newAquariumDraw(tableMatrix);
 
     glfwSwapBuffers(window);  // Copy back buffer to the front buffer
 }
