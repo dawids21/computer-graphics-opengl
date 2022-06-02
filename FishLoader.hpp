@@ -3,6 +3,7 @@
 
 #include <vector>
 
+#include "ObjLoader.hpp"
 #include "TextureLoader.hpp"
 #include "glm/glm.hpp"
 
@@ -27,12 +28,12 @@ enum FishType {
 
 class FishLoader {
    private:
-    std::vector<Fish> fish;
+    std::vector<ObjModel> fish;
 
    public:
     FishLoader();
     ~FishLoader();
     void load(TextureLoader *textureLoader);
-    Fish getFish(FishType fishType);
+    ObjModel getFish(FishType fishType);
 };
 #endif  // FISH_LOADER

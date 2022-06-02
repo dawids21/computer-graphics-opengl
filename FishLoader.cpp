@@ -34,14 +34,10 @@ void FishLoader::load(TextureLoader *textureLoader) {
     for (size_t i = 0; i < size(types); i++) {
         FishType type = types[i];
         objLoader.load(info[type].path + "/" + info[type].objFilename, info[type].path);
-        Fish fish = {objLoader.getVertices(0),
-                     objLoader.getNormals(0),
-                     objLoader.getTextcoords(0),
-                     textureLoader->loadTexture(info[type].path + "/" + info[type].texFilename)};
-        this->fish.push_back(fish);
+        this->fish.push_back(objLoader.get()[0]);
     }
 }
 
-Fish FishLoader::getFish(FishType fishType) {
+ObjModel FishLoader::getFish(FishType fishType) {
     return this->fish[fishType];
 }

@@ -222,25 +222,29 @@ glm::mat4 drawSingleFish(glm::mat4 position, FishType fishType, float scaleFacto
 
     mat4 fishMatrix = fishAnimator.getAnimation(animationType, position);
     mat4 scaledFishMatrix = scale(fishMatrix, vec3(scaleFactor));
-    Fish fish = fishLoader.getFish(fishType);
+    ObjModel fish = fishLoader.getFish(fishType);
 
     activateLambertTexturedShader();
     glUniformMatrix4fv(spLambertTextured->u("M"), 1, false, value_ptr(scaledFishMatrix));
 
     glEnableVertexAttribArray(spLambertTextured->a("vertex"));
-    glVertexAttribPointer(spLambertTextured->a("vertex"), 4, GL_FLOAT, false, 0, &fish.vertex[0]);
+    glVertexAttribPointer(spLambertTextured->a("vertex"), 4, GL_FLOAT, false, 0, &fish.vertices[0]);
     glEnableVertexAttribArray(spLambertTextured->a("normal"));
-    glVertexAttribPointer(spLambertTextured->a("normal"), 4, GL_FLOAT, false, 0, &fish.normal[0]);
-    glEnableVertexAttribArray(spLambertTextured->a("texCoord"));
-    glVertexAttribPointer(spLambertTextured->a("texCoord"), 2, GL_FLOAT, false, 0, &fish.texCoord[0]);
+    glVertexAttribPointer(spLambertTextured->a("normal"), 4, GL_FLOAT, false, 0, &fish.normals[0]);
 
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, textureLoader.getTexture(fish.textureId));
-    glUniform1i(spLambertTextured->u("tex"), 0);
-    glDrawArrays(GL_TRIANGLES, 0, fish.vertex.size() / 4);
+    if (fish.textureAvailable) {
+        glEnableVertexAttribArray(spLambertTextured->a("texCoord"));
+        glVertexAttribPointer(spLambertTextured->a("texCoord"), 2, GL_FLOAT, false, 0, &fish.texcoords[0]);
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, fish.texture);
+        glUniform1i(spLambertTextured->u("tex"), 0);
+    }
+    glDrawArrays(GL_TRIANGLES, 0, fish.vertices.size() / 4);
     glDisableVertexAttribArray(spLambertTextured->a("vertex"));
     glDisableVertexAttribArray(spLambertTextured->a("normal"));
-    glDisableVertexAttribArray(spLambertTextured->a("texCoord"));
+    if (fish.textureAvailable) {
+        glDisableVertexAttribArray(spLambertTextured->a("texCoord"));
+    }
 
     return fishMatrix;
 }
