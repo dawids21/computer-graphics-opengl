@@ -19,7 +19,7 @@ FishLoader::FishLoader() {
 FishLoader::~FishLoader() {
 }
 
-void FishLoader::load(TextureLoader *textureLoader) {
+void FishLoader::load() {
     vector<struct FishInfo> info;
     info.push_back({"13006_Blue_Tang_v1_l3.obj", "13006_Blue_Tang_v1_diff.png", "./models/fish/blue"});
     info.push_back({"12999_Boesemani_Rainbow_v1_l2.obj", "12999_Boesemani_Rainbow_diff.png", "./models/fish/boesemani"});

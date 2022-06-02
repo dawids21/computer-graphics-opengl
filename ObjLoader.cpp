@@ -16,9 +16,6 @@ ObjLoader::~ObjLoader() {
 }
 
 size_t ObjLoader::load(std::string filename, std::string path) {
-    this->vertices.clear();
-    this->normals.clear();
-    this->texcoords.clear();
     this->models.clear();
 
     tinyobj::ObjReaderConfig reader_config;
@@ -102,24 +99,8 @@ size_t ObjLoader::load(std::string filename, std::string path) {
         }
         model.shininess = materials[s].shininess;
         this->models.push_back(model);
-
-        this->vertices.push_back(vertices);
-        this->normals.push_back(normals);
-        this->texcoords.push_back(texcoords);
     }
     return shapes.size();
-}
-
-std::vector<float> ObjLoader::getVertices(size_t i) {
-    return this->vertices[i];
-}
-
-std::vector<float> ObjLoader::getNormals(size_t i) {
-    return this->normals[i];
-}
-
-std::vector<float> ObjLoader::getTextcoords(size_t i) {
-    return this->texcoords[i];
 }
 
 std::vector<ObjModel> ObjLoader::get() {

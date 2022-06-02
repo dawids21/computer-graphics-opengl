@@ -49,7 +49,6 @@ vec3 pos = vec3(0, C_PERSON_HEIGHT, -5);
 vec3 pos_prev = vec3(0, C_PERSON_HEIGHT, -5);
 vec3 dir = vec3(0, 0, 1);
 
-TextureLoader textureLoader;
 FishLoader fishLoader;
 FishAnimator fishAnimator;
 
@@ -93,12 +92,13 @@ void initOpenGLProgram(GLFWwindow* window) {
     glEnable(GL_DEPTH_TEST);   // Turn on pixel depth test based on depth buffer
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glEnable(GL_BLEND);
-    fishLoader.load(&textureLoader);
+    fishLoader.load();
     ObjLoader objLoader;
     size_t shapes = objLoader.load("./models/aquarium/12986_Freshwater_Aquarium_v1_l2.obj", "./models/aquarium");
     for (size_t i = 0; i < shapes; i++) {
-        aquariumVertices.push_back(objLoader.getVertices(i));
-        aquariumNormals.push_back(objLoader.getNormals(i));
+        ObjModel model = objLoader.get()[i];
+        aquariumVertices.push_back(model.vertices);
+        aquariumNormals.push_back(model.normals);
     }
     glDisable(GL_CULL_FACE);
     glfwSetKeyCallback(window, key_callback);

@@ -7,15 +7,6 @@
 #include "TextureLoader.hpp"
 #include "glm/glm.hpp"
 
-struct Fish {
-    std::vector<float> vertex;
-    std::vector<float> normal;
-    std::vector<float> texCoord;
-    int textureId;
-};
-
-typedef struct Fish Fish;
-
 enum FishType {
     BLUE = 0,
     BOESEMANI = 1,
@@ -33,7 +24,7 @@ class FishLoader {
    public:
     FishLoader();
     ~FishLoader();
-    void load(TextureLoader *textureLoader);
+    void load();
     ObjModel getFish(FishType fishType);
 };
 #endif  // FISH_LOADER

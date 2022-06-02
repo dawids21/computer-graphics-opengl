@@ -8,14 +8,10 @@
 
 class TextureLoader {
    private:
-    std::vector<GLuint> textures;
-
    public:
     TextureLoader();
     ~TextureLoader();
-    int loadTexture(std::string filename);
     GLuint load(std::string filename);
-    GLuint getTexture(int id);
 };
 
 #endif  // TEXUTRE_LOADER_HPP

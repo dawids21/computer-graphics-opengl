@@ -39,18 +39,12 @@ typedef struct ObjModel ObjModel;
 
 class ObjLoader {
    private:
-    std::vector<std::vector<float>> vertices;
-    std::vector<std::vector<float>> normals;
-    std::vector<std::vector<float>> texcoords;
     std::vector<ObjModel> models;
 
    public:
     ObjLoader();
     ~ObjLoader();
     size_t load(std::string filename, std::string path);
-    std::vector<float> getVertices(size_t i);
-    std::vector<float> getNormals(size_t i);
-    std::vector<float> getTextcoords(size_t i);
     std::vector<ObjModel> get();
 };
 
