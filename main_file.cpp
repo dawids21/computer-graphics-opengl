@@ -252,26 +252,26 @@ glm::mat4 newAquariumDraw(glm::mat4 matrix) {
     mat4 M = translate(matrix, vec3(5.0f, 0.0f, -3.0f));
     M = scale(M, vec3(0.01f));
 
-    activateConstantShader();
-    glUniformMatrix4fv(spConstant->u("M"), 1, false, value_ptr(M));
+    activateLambertShader();
+    glUniformMatrix4fv(spLambert->u("M"), 1, false, value_ptr(M));
 
     for (int i = aquariumModel.size() - 1; i >= 0; i--) {
         RGB color = aquariumModel[i].diffuse;
-        glUniform4f(spConstant->u("color"), color.r, color.g, color.b, aquariumModel[i].dissolve);
-        glEnableVertexAttribArray(spConstant->a("vertex"));
-        glVertexAttribPointer(spConstant->a("vertex"), 4, GL_FLOAT, false, 0, &(aquariumModel[i].vertices)[0]);
-        glEnableVertexAttribArray(spConstant->a("normal"));
-        glVertexAttribPointer(spConstant->a("normal"), 4, GL_FLOAT, false, 0, &(aquariumModel[i].normals)[0]);
-        // glEnableVertexAttribArray(spConstant->a("texCoord"));
-        // glVertexAttribPointer(spConstant->a("texCoord"), 2, GL_FLOAT, false, 0, &fish.texCoord[0]);
+        glUniform4f(spLambert->u("color"), color.r, color.g, color.b, aquariumModel[i].dissolve);
+        glEnableVertexAttribArray(spLambert->a("vertex"));
+        glVertexAttribPointer(spLambert->a("vertex"), 4, GL_FLOAT, false, 0, &(aquariumModel[i].vertices)[0]);
+        glEnableVertexAttribArray(spLambert->a("normal"));
+        glVertexAttribPointer(spLambert->a("normal"), 4, GL_FLOAT, false, 0, &(aquariumModel[i].normals)[0]);
+        // glEnableVertexAttribArray(spLambert->a("texCoord"));
+        // glVertexAttribPointer(spLambert->a("texCoord"), 2, GL_FLOAT, false, 0, &fish.texCoord[0]);
 
         // glActiveTexture(GL_TEXTURE0);
         // glBindTexture(GL_TEXTURE_2D, textureLoader.getTexture(fish.textureId));
-        // glUniform1i(spConstant->u("tex"), 0);
+        // glUniform1i(spLambert->u("tex"), 0);
         glDrawArrays(GL_TRIANGLES, 0, aquariumModel[i].vertices.size() / 4);
-        glDisableVertexAttribArray(spConstant->a("vertex"));
-        glDisableVertexAttribArray(spConstant->a("normal"));
-        // glDisableVertexAttribArray(spConstant->a("texCoord"));
+        glDisableVertexAttribArray(spLambert->a("vertex"));
+        glDisableVertexAttribArray(spLambert->a("normal"));
+        // glDisableVertexAttribArray(spLambert->a("texCoord"));
     }
 
     return matrix;
