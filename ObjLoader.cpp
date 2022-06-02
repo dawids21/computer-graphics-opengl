@@ -97,8 +97,8 @@ size_t ObjLoader::load(std::string filename, std::string path) {
             model.texture = 0;
             model.textureAvailable = false;
         } else {
-            model.texture = textureLoader.load(path + materials[s].diffuse_texname);
-            model.textureAvailable = false;
+            model.texture = textureLoader.load(path + "/" + materials[s].diffuse_texname);
+            model.textureAvailable = true;
         }
         model.shininess = materials[s].shininess;
         this->models.push_back(model);
