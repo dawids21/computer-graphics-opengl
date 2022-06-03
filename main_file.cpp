@@ -280,57 +280,63 @@ void drawFish(glm::mat4 aquariumMatrix) {
         FULL_DEPTH,
         CCLK);
     drawSingleFish(
-        translate(aquariumMatrix, vec3(0.0f, -0.6f, (-C_AQUARIUM_DEPTH / 2.0f) + 0.8f)),
+        rotate(translate(aquariumMatrix, vec3((-C_AQUARIUM_WIDTH / 2.0f) + 0.8f, 0.6f, (C_AQUARIUM_DEPTH / 2.0f) - 0.3f)), PI / 2, vec3(0.0f, 1.0f, 0.0f)),
         GOLD,
-        0.05f,
-        WIDTH,
+        0.08f,
+        FULL_WIDTH,
+        CCLK);
+    drawSingleFish(
+        rotate(translate(aquariumMatrix, vec3((-C_AQUARIUM_WIDTH / 2.0f) + 0.8f, -0.4f, (-C_AQUARIUM_DEPTH / 2.0f) + 0.3f)), PI / 2, vec3(0.0f, 1.0f, 0.0f)),
+        YELLOW,
+        0.02f,
+        FULL_WIDTH,
         CLK);
     drawSingleFish(
-        translate(aquariumMatrix, vec3(0.0f, 0.2f, (-C_AQUARIUM_DEPTH / 2.0f) + 0.8f)),
+        translate(aquariumMatrix, vec3(0.0f, -0.6f, (-C_AQUARIUM_DEPTH / 2.0f) + 0.8f)),
+        TURKUS,
+        0.05f,
+        DEPTH,
+        CLK);
+    drawSingleFish(
+        translate(aquariumMatrix, vec3((-C_AQUARIUM_WIDTH / 2.0f) + 1.2f, 0.2f, (-C_AQUARIUM_DEPTH / 2.0f) + 0.8f)),
         SOLON,
         0.05f,
         DEPTH,
         CLK);
     drawSingleFish(
-        rotate(translate(aquariumMatrix, vec3((C_AQUARIUM_WIDTH / 2.0f) - 0.3f, 0.0f, (-C_AQUARIUM_DEPTH / 2.0f) + 1.0f)), -PI / 4, vec3(0.0f, 1.0f, 0.0f)),
+        translate(aquariumMatrix, vec3((C_AQUARIUM_WIDTH / 2.0f) - 1.2f, 0.5f, (-C_AQUARIUM_DEPTH / 2.0f) + 0.8f)),
         BOESEMANI,
         0.05f,
-        WIDTH,
-        CLK);
-    drawSingleFish(
-        rotate(translate(aquariumMatrix, vec3((C_AQUARIUM_WIDTH / 2.0f) - 0.8f, 0.2f, (-C_AQUARIUM_DEPTH / 2.0f) + 1.2f)), -PI / 2, vec3(0.0f, 1.0f, 0.0f)),
-        TURKUS,
-        0.05f,
-        WIDTH,
-        CLK);
-    drawSingleFish(
-        translate(aquariumMatrix, vec3((-C_AQUARIUM_WIDTH / 2.0f) + 1.2f, 0.3f, (-C_AQUARIUM_DEPTH / 2.0f) + 0.8f)),
-        YELLOW,
-        0.02f,
-        WIDTH,
-        CLK);
-    drawSingleFish(
-        rotate(translate(aquariumMatrix, vec3((-C_AQUARIUM_WIDTH / 2.0f) + 1.0f, 0.3f, (C_AQUARIUM_DEPTH / 2.0f) - 0.3f)), 3 * PI / 4, vec3(0.0f, 1.0f, 0.0f)),
-        CORAL,
-        0.5f,
-        WIDTH,
+        DEPTH,
         CCLK);
     drawSingleFish(
-        rotate(translate(aquariumMatrix, vec3(-0.5f, 0.5f, (C_AQUARIUM_DEPTH / 2.0f) - 0.8f)), PI, vec3(0.0f, 1.0f, 0.0f)),
+        rotate(translate(aquariumMatrix, vec3((C_AQUARIUM_WIDTH / 2.0f) - 0.7f, 0.5f, (C_AQUARIUM_DEPTH / 2.0f) - 0.8f)), PI, vec3(0.0f, 1.0f, 0.0f)),
         BLUE,
         0.05f,
         DEPTH,
         CCLK);
     drawSingleFish(
-        translate(aquariumMatrix, vec3((C_AQUARIUM_WIDTH / 2.0f) - 1.5f, -0.5f, (-C_AQUARIUM_DEPTH / 2.0f) + 0.8f)),
-        BOESEMANI,
+        rotate(translate(aquariumMatrix, vec3((C_AQUARIUM_WIDTH / 2.0f) - 0.8f, 0.2f, (-C_AQUARIUM_DEPTH / 2.0f) + 1.2f)), -PI / 2, vec3(0.0f, 1.0f, 0.0f)),
+        TURKUS,
+        0.06f,
+        WIDTH,
+        CLK);
+    drawSingleFish(
+        rotate(translate(aquariumMatrix, vec3((-C_AQUARIUM_WIDTH / 2.0f) + 0.8f, 0.3f, (-C_AQUARIUM_DEPTH / 2.0f) + 0.8f)), PI / 2, vec3(0.0f, 1.0f, 0.0f)),
+        YELLOW,
+        0.02f,
+        WIDTH,
+        CLK);
+    drawSingleFish(
+        rotate(translate(aquariumMatrix, vec3((-C_AQUARIUM_WIDTH / 2.0f) + 0.8f, 0.6f, (C_AQUARIUM_DEPTH / 2.0f) - 0.3f)), PI / 2, vec3(0.0f, 1.0f, 0.0f)),
+        SOLON,
         0.05f,
         WIDTH,
         CCLK);
     drawSingleFish(
-        rotate(translate(aquariumMatrix, vec3((-C_AQUARIUM_WIDTH / 2.0f) + 0.8f, -0.6f, (-C_AQUARIUM_DEPTH / 2.0f) + 1.4f)), PI / 2, vec3(0.0f, 1.0f, 0.0f)),
-        TURKUS,
-        0.05f,
+        rotate(translate(aquariumMatrix, vec3((C_AQUARIUM_WIDTH / 2.0f) - 0.8f, -0.5f, (-C_AQUARIUM_DEPTH / 2.0f) + 0.8f)), -PI / 2, vec3(0.0f, 1.0f, 0.0f)),
+        GOLD,
+        0.08f,
         WIDTH,
         CCLK);
 }
