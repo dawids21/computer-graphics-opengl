@@ -239,7 +239,7 @@ glm::mat4 drawSingleFish(glm::mat4 position, FishType fishType, float scaleFacto
 glm::mat4 newAquariumDraw(glm::mat4 matrix) {
     using namespace glm;
 
-    mat4 m = scale(matrix, vec3(0.03f));
+    mat4 m = scale(matrix, vec3(C_AQUARIUM_SCALE_FACTOR));
 
     activateLambertShader();
     glUniformMatrix4fv(spLambert->u("M"), 1, false, value_ptr(m));
@@ -268,12 +268,12 @@ glm::mat4 newAquariumDraw(glm::mat4 matrix) {
 
 void drawFish(glm::mat4 aquariumMatrix) {
     drawSingleFish(
-        translate(aquariumMatrix, vec3((C_AQUARIUM_WIDTH / 2.0f) - 0.3f, 0.0f, (-C_AQUARIUM_WIDTH / 2.0f) + 0.8f)),
+        translate(aquariumMatrix, vec3((C_AQUARIUM_WIDTH / 2.0f) - 0.3f, 0.0f, (-C_AQUARIUM_DEPTH / 2.0f) + 0.8f)),
         BLUE,
         0.05f,
         FULL);
     drawSingleFish(
-        translate(aquariumMatrix, vec3(0.0f, -0.6f, (-C_AQUARIUM_WIDTH / 2.0f) + 0.8f)),
+        translate(aquariumMatrix, vec3(0.0f, -0.6f, (-C_AQUARIUM_DEPTH / 2.0f) + 0.8f)),
         GOLD,
         0.05f,
         WIDTH);
@@ -283,42 +283,42 @@ void drawFish(glm::mat4 aquariumMatrix) {
         0.05f,
         WIDTH);
     drawSingleFish(
-        rotate(translate(aquariumMatrix, vec3((C_AQUARIUM_WIDTH / 2.0f) - 0.3f, 0.0f, (-C_AQUARIUM_WIDTH / 2.0f) + 1.0f)), -PI / 4, vec3(0.0f, 1.0f, 0.0f)),
+        rotate(translate(aquariumMatrix, vec3((C_AQUARIUM_WIDTH / 2.0f) - 0.3f, 0.0f, (-C_AQUARIUM_DEPTH / 2.0f) + 1.0f)), -PI / 4, vec3(0.0f, 1.0f, 0.0f)),
         BOESEMANI,
         0.05f,
         DIAGONAL);
     drawSingleFish(
-        rotate(translate(aquariumMatrix, vec3((C_AQUARIUM_WIDTH / 2.0f) - 0.8f, 0.2f, (-C_AQUARIUM_WIDTH / 2.0f) + 1.2f)), -PI / 2, vec3(0.0f, 1.0f, 0.0f)),
+        rotate(translate(aquariumMatrix, vec3((C_AQUARIUM_WIDTH / 2.0f) - 0.8f, 0.2f, (-C_AQUARIUM_DEPTH / 2.0f) + 1.2f)), -PI / 2, vec3(0.0f, 1.0f, 0.0f)),
         TURKUS,
         0.05f,
         WIDTH);
     drawSingleFish(
-        translate(aquariumMatrix, vec3((-C_AQUARIUM_WIDTH / 2.0f) + 1.2f, 0.3f, (-C_AQUARIUM_WIDTH / 2.0f) + 0.8f)),
+        translate(aquariumMatrix, vec3((-C_AQUARIUM_WIDTH / 2.0f) + 1.2f, 0.3f, (-C_AQUARIUM_DEPTH / 2.0f) + 0.8f)),
         YELLOW,
         0.02f,
         WIDTH);
     drawSingleFish(
-        rotate(translate(aquariumMatrix, vec3((-C_AQUARIUM_WIDTH / 2.0f) + 1.0f, 0.3f, (C_AQUARIUM_WIDTH / 2.0f) - 0.3f)), 3 * PI / 4, vec3(0.0f, 1.0f, 0.0f)),
+        rotate(translate(aquariumMatrix, vec3((-C_AQUARIUM_WIDTH / 2.0f) + 1.0f, 0.3f, (C_AQUARIUM_DEPTH / 2.0f) - 0.3f)), 3 * PI / 4, vec3(0.0f, 1.0f, 0.0f)),
         CORAL,
         0.5f,
         DIAGONAL_REVERSE);
     drawSingleFish(
-        rotate(translate(aquariumMatrix, vec3((C_AQUARIUM_WIDTH / 2.0f) - 0.3f, -0.2f, (C_AQUARIUM_WIDTH / 2.0f) - 0.8f)), PI, vec3(0.0f, 1.0f, 0.0f)),
+        rotate(translate(aquariumMatrix, vec3((C_AQUARIUM_WIDTH / 2.0f) - 0.3f, -0.2f, (C_AQUARIUM_DEPTH / 2.0f) - 0.8f)), PI, vec3(0.0f, 1.0f, 0.0f)),
         CORAL,
         0.5f,
         FULL_REVERSE);
     drawSingleFish(
-        rotate(translate(aquariumMatrix, vec3((-C_AQUARIUM_WIDTH / 2.0f) + 0.3f, 0.5f, (-C_AQUARIUM_WIDTH / 2.0f) + 1.0f)), PI / 4, vec3(0.0f, 1.0f, 0.0f)),
+        rotate(translate(aquariumMatrix, vec3((-C_AQUARIUM_WIDTH / 2.0f) + 0.3f, 0.5f, (-C_AQUARIUM_DEPTH / 2.0f) + 1.0f)), PI / 4, vec3(0.0f, 1.0f, 0.0f)),
         BLUE,
         0.05f,
         DIAGONAL_REVERSE);
     drawSingleFish(
-        translate(aquariumMatrix, vec3((C_AQUARIUM_WIDTH / 2.0f) - 1.5f, -0.5f, (-C_AQUARIUM_WIDTH / 2.0f) + 0.8f)),
+        translate(aquariumMatrix, vec3((C_AQUARIUM_WIDTH / 2.0f) - 1.5f, -0.5f, (-C_AQUARIUM_DEPTH / 2.0f) + 0.8f)),
         BOESEMANI,
         0.05f,
         WIDTH_REVERSE);
     drawSingleFish(
-        rotate(translate(aquariumMatrix, vec3((-C_AQUARIUM_WIDTH / 2.0f) + 0.8f, -0.6f, (-C_AQUARIUM_WIDTH / 2.0f) + 1.4f)), PI / 2, vec3(0.0f, 1.0f, 0.0f)),
+        rotate(translate(aquariumMatrix, vec3((-C_AQUARIUM_WIDTH / 2.0f) + 0.8f, -0.6f, (-C_AQUARIUM_DEPTH / 2.0f) + 1.4f)), PI / 2, vec3(0.0f, 1.0f, 0.0f)),
         TURKUS,
         0.05f,
         WIDTH_REVERSE);
@@ -398,7 +398,7 @@ int main(void) {
 
         pos += ws * (float)time * mdir;
 
-        if (abs(pos.x) < C_AQUARIUM_WIDTH + 0.1f && abs(pos.z) < C_AQUARIUM_WIDTH + 0.1f) {
+        if (abs(pos.x) < C_AQUARIUM_WIDTH + 0.1f && abs(pos.z) < C_AQUARIUM_DEPTH + 0.1f) {
             pos = vec3(pos_prev.x, pos.y, pos_prev.z);
         }
 
