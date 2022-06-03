@@ -186,26 +186,29 @@ glm::mat4 table(glm::mat4 initMatrix) {
 
     mat4 matrix = scale(initMatrix, vec3(C_TABLE_SCALE_FACTOR));
 
-    activateLambertShader();
-    glUniformMatrix4fv(spLambert->u("M"), 1, false, value_ptr(matrix));
+    activateLambertTexturedShader();
+    glUniformMatrix4fv(spLambertTextured->u("M"), 1, false, value_ptr(matrix));
 
     for (int i = tableModel.size() - 1; i >= 0; i--) {
         RGB color = tableModel[i].diffuse;
-        glUniform4f(spLambert->u("color"), color.r, color.g, color.b, tableModel[i].dissolve);
-        glEnableVertexAttribArray(spLambert->a("vertex"));
-        glVertexAttribPointer(spLambert->a("vertex"), 4, GL_FLOAT, false, 0, &(tableModel[i].vertices)[0]);
-        glEnableVertexAttribArray(spLambert->a("normal"));
-        glVertexAttribPointer(spLambert->a("normal"), 4, GL_FLOAT, false, 0, &(tableModel[i].normals)[0]);
-        // glEnableVertexAttribArray(spLambert->a("texCoord"));
-        // glVertexAttribPointer(spLambert->a("texCoord"), 2, GL_FLOAT, false, 0, &fish.texCoord[0]);
-
-        // glActiveTexture(GL_TEXTURE0);
-        // glBindTexture(GL_TEXTURE_2D, textureLoader.getTexture(fish.textureId));
-        // glUniform1i(spLambert->u("tex"), 0);
+        glUniform4f(spLambertTextured->u("color"), color.r, color.g, color.b, tableModel[i].dissolve);
+        glEnableVertexAttribArray(spLambertTextured->a("vertex"));
+        glVertexAttribPointer(spLambertTextured->a("vertex"), 4, GL_FLOAT, false, 0, &(tableModel[i].vertices)[0]);
+        glEnableVertexAttribArray(spLambertTextured->a("normal"));
+        glVertexAttribPointer(spLambertTextured->a("normal"), 4, GL_FLOAT, false, 0, &(tableModel[i].normals)[0]);
+        if (tableModel[i].textureAvailable) {
+            glEnableVertexAttribArray(spLambertTextured->a("texCoord"));
+            glVertexAttribPointer(spLambertTextured->a("texCoord"), 2, GL_FLOAT, false, 0, &(tableModel[i].texcoords)[0]);
+            glActiveTexture(GL_TEXTURE0);
+            glBindTexture(GL_TEXTURE_2D, tableModel[i].texture);
+            glUniform1i(spLambertTextured->u("tex"), 0);
+        }
         glDrawArrays(GL_TRIANGLES, 0, tableModel[i].vertices.size() / 4);
-        glDisableVertexAttribArray(spLambert->a("vertex"));
-        glDisableVertexAttribArray(spLambert->a("normal"));
-        // glDisableVertexAttribArray(spLambert->a("texCoord"));
+        glDisableVertexAttribArray(spLambertTextured->a("vertex"));
+        glDisableVertexAttribArray(spLambertTextured->a("normal"));
+        if (tableModel[i].textureAvailable) {
+            glDisableVertexAttribArray(spLambertTextured->a("texCoord"));
+        }
     }
 
     return translate(initMatrix, vec3(0.0f, C_TABLE_HEIGHT, 0.0f));
