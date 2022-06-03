@@ -54,6 +54,7 @@ FishLoader fishLoader;
 FishAnimator fishAnimator;
 
 std::vector<ObjModel> aquariumModel;
+std::vector<ObjModel> tableModel;
 
 // Error processing callback procedure
 void error_callback(int error, const char* description) {
@@ -94,9 +95,11 @@ void initOpenGLProgram(GLFWwindow* window) {
     glEnable(GL_BLEND);
     fishLoader.load();
     ObjLoader objLoader;
-    size_t shapes = objLoader.load("./models/aquarium/12986_Freshwater_Aquarium_v1_l2.obj", "./models/aquarium");
+    objLoader.load("./models/aquarium/12986_Freshwater_Aquarium_v1_l2.obj", "./models/aquarium");
     aquariumModel = objLoader.get();
     std::sort(aquariumModel.begin(), aquariumModel.end());
+    objLoader.load("./models/table/table.obj", "./models/table");
+    tableModel = objLoader.get();
     glDisable(GL_CULL_FACE);
     glfwSetKeyCallback(window, key_callback);
 }
@@ -136,15 +139,15 @@ void activateLambertTexturedShader() {
     glUniformMatrix4fv(spLambertTextured->u("V"), 1, false, glm::value_ptr(V));
 }
 
-void floor(glm:: mat4 initMatrix){
-
+mat4 floor(glm::mat4 initMatrix) {
     activateConstantShader();
 
-    mat4 floorMatrix = translate(initMatrix, vec3(0,-2 * C_TABLE_HEIGHT, 0));
-    floorMatrix = scale(floorMatrix, vec3(C_ROOM_SIZE, 0.1f, C_ROOM_SIZE));
+    mat4 floorMatrix = translate(initMatrix, vec3(0, 0, 0));
+    mat4 scaledFloorMatrix = scale(floorMatrix, vec3(C_ROOM_SIZE, 0.1f, C_ROOM_SIZE));
     glUniform4f(spConstant->u("color"), 0.5, 0.5, 0.5, 1);
-    glUniformMatrix4fv(spConstant->u("M"), 1, false, value_ptr(floorMatrix));
+    glUniformMatrix4fv(spConstant->u("M"), 1, false, value_ptr(scaledFloorMatrix));
     Models::cube.drawSolid();
+    return floorMatrix;
 }
 
 void walls(glm:: mat4 initMatrix){
@@ -196,6 +199,37 @@ glm::mat4 table(glm::mat4 initMatrix) {
     Models::cube.drawSolid();
 
     return translate(tableMatrix, vec3(0.0f, 0.125f, 0.0f));
+}
+
+// returns matrix on the top of the table, at center point
+glm::mat4 newTable(glm::mat4 initMatrix) {
+    using namespace glm;
+
+    mat4 matrix = scale(initMatrix, vec3(C_TABLE_SCALE_FACTOR));
+
+    activateLambertShader();
+    glUniformMatrix4fv(spLambert->u("M"), 1, false, value_ptr(matrix));
+
+    for (int i = tableModel.size() - 1; i >= 0; i--) {
+        RGB color = tableModel[i].diffuse;
+        glUniform4f(spLambert->u("color"), color.r, color.g, color.b, tableModel[i].dissolve);
+        glEnableVertexAttribArray(spLambert->a("vertex"));
+        glVertexAttribPointer(spLambert->a("vertex"), 4, GL_FLOAT, false, 0, &(tableModel[i].vertices)[0]);
+        glEnableVertexAttribArray(spLambert->a("normal"));
+        glVertexAttribPointer(spLambert->a("normal"), 4, GL_FLOAT, false, 0, &(tableModel[i].normals)[0]);
+        // glEnableVertexAttribArray(spLambert->a("texCoord"));
+        // glVertexAttribPointer(spLambert->a("texCoord"), 2, GL_FLOAT, false, 0, &fish.texCoord[0]);
+
+        // glActiveTexture(GL_TEXTURE0);
+        // glBindTexture(GL_TEXTURE_2D, textureLoader.getTexture(fish.textureId));
+        // glUniform1i(spLambert->u("tex"), 0);
+        glDrawArrays(GL_TRIANGLES, 0, tableModel[i].vertices.size() / 4);
+        glDisableVertexAttribArray(spLambert->a("vertex"));
+        glDisableVertexAttribArray(spLambert->a("normal"));
+        // glDisableVertexAttribArray(spLambert->a("texCoord"));
+    }
+
+    return translate(initMatrix, vec3(0.0f, C_TABLE_HEIGHT, 0.0f));
 }
 
 // returns matrix at the center of the aquarium
@@ -349,10 +383,11 @@ void drawScene(GLFWwindow* window, float angle) {
     glm::mat4 unitMatrix = glm::mat4(1.0f);
     unitMatrix = glm::rotate(unitMatrix, angle, glm::vec3(0.0f, 1.0f, 0.0f));
 
-    floor(unitMatrix);
+    glm::mat4 floorMatrix = floor(unitMatrix);
     walls(unitMatrix);
 
-    glm::mat4 tableMatrix = table(unitMatrix);
+    // glm::mat4 tableMatrix = table(unitMatrix);
+    glm::mat4 tableMatrix = newTable(floorMatrix);
     glm::mat4 aquariumMatrix = aquariumNoDraw(tableMatrix);  // I have to draw the aquarium at the end because of the alpha channel
     drawFish(aquariumMatrix);
     newAquariumDraw(tableMatrix);
