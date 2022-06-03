@@ -4,7 +4,8 @@
 #include "glm/glm.hpp"
 
 enum AnimationType {
-    FULL,
+    FULL_DEPTH,
+    FULL_WIDTH,
     WIDTH,
     DEPTH
 };
@@ -17,7 +18,8 @@ enum AnimationDir {
 class FishAnimator {
    private:
     double time;
-    glm::mat4 getAnimationFull(glm::mat4 initMatrix, AnimationDir direction);
+    glm::mat4 getAnimationFullDepth(glm::mat4 initMatrix, AnimationDir direction);
+    glm::mat4 getAnimationFullWidth(glm::mat4 initMatrix, AnimationDir direction);
     glm::mat4 getAnimationWidth(glm::mat4 initMatrix, AnimationDir direction);
     glm::mat4 getAnimationDepth(glm::mat4 initMatrix, AnimationDir direction);
 

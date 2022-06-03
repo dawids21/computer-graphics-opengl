@@ -25,8 +25,10 @@ static float stepTime(float time, float startTime, float stepTime) {
 }
 
 glm::mat4 FishAnimator::getAnimation(AnimationType type, glm::mat4 initMatrix, AnimationDir direction) {
-    if (type == FULL) {
-        return this->getAnimationFull(initMatrix, direction);
+    if (type == FULL_DEPTH) {
+        return this->getAnimationFullDepth(initMatrix, direction);
+    } else if (type == FULL_WIDTH) {
+        return this->getAnimationFullWidth(initMatrix, direction);
     } else if (type == WIDTH) {
         return this->getAnimationWidth(initMatrix, direction);
     } else if (type == DEPTH) {
@@ -35,7 +37,7 @@ glm::mat4 FishAnimator::getAnimation(AnimationType type, glm::mat4 initMatrix, A
     return initMatrix;
 }
 
-glm::mat4 FishAnimator::getAnimationFull(glm::mat4 initMatrix, AnimationDir direction) {
+glm::mat4 FishAnimator::getAnimationFullDepth(glm::mat4 initMatrix, AnimationDir direction) {
     using namespace glm;
 
     float currentTime = std::fmod(this->time, 6.0f);
@@ -45,7 +47,7 @@ glm::mat4 FishAnimator::getAnimationFull(glm::mat4 initMatrix, AnimationDir dire
     int counter = 0;
 
     mat4 fishMatrix = initMatrix;
-    fishMatrix = translate(fishMatrix, vec3(0.0f, 0.0f, (C_AQUARIUM_WIDTH - 1.6f) * stepTime(currentTime, steps[counter], stepTimes[counter])));
+    fishMatrix = translate(fishMatrix, vec3(0.0f, 0.0f, (C_AQUARIUM_DEPTH - 1.6f) * stepTime(currentTime, steps[counter], stepTimes[counter])));
     counter++;
     if (currentTime > steps[counter]) {
         fishMatrix = translate(fishMatrix, vec3(direction * 0.5f, 0.0f, 0.0f));
@@ -64,7 +66,7 @@ glm::mat4 FishAnimator::getAnimationFull(glm::mat4 initMatrix, AnimationDir dire
         counter++;
     }
     if (currentTime > steps[counter]) {
-        fishMatrix = translate(fishMatrix, vec3(0.0f, 0.0f, (C_AQUARIUM_WIDTH - 1.6f) * stepTime(currentTime, steps[counter], stepTimes[counter])));
+        fishMatrix = translate(fishMatrix, vec3(0.0f, 0.0f, (C_AQUARIUM_DEPTH - 1.6f) * stepTime(currentTime, steps[counter], stepTimes[counter])));
         counter++;
     }
     if (currentTime > steps[counter]) {
@@ -75,6 +77,56 @@ glm::mat4 FishAnimator::getAnimationFull(glm::mat4 initMatrix, AnimationDir dire
     }
     if (currentTime > steps[counter]) {
         fishMatrix = translate(fishMatrix, vec3(0.0f, 0.0f, (C_AQUARIUM_WIDTH - 1.6f) * stepTime(currentTime, steps[counter], stepTimes[counter])));
+        counter++;
+    }
+    if (currentTime > steps[counter]) {
+        fishMatrix = translate(fishMatrix, vec3(direction * 0.5f, 0.0f, 0.0f));
+        fishMatrix = rotate(fishMatrix, direction * PI / 2.0f * stepTime(currentTime, steps[counter], stepTimes[counter]), vec3(0.0f, 1.0f, 0.0f));
+        fishMatrix = translate(fishMatrix, vec3(-direction * 0.5f, 0.0f, 0.0f));
+    }
+    return fishMatrix;
+}
+
+glm::mat4 FishAnimator::getAnimationFullWidth(glm::mat4 initMatrix, AnimationDir direction) {
+    using namespace glm;
+
+    float currentTime = std::fmod(this->time, 6.0f);
+
+    float steps[] = {0.0f, 1.0f, 1.5f, 2.5f, 3.0f, 4.0f, 4.5f, 5.5f};
+    float stepTimes[] = {1.0f, 0.5f, 1.0f, 0.5f, 1.0f, 0.5f, 1.0f, 0.5f};
+    int counter = 0;
+
+    mat4 fishMatrix = initMatrix;
+    fishMatrix = translate(fishMatrix, vec3(0.0f, 0.0f, (C_AQUARIUM_WIDTH - 1.6f) * stepTime(currentTime, steps[counter], stepTimes[counter])));
+    counter++;
+    if (currentTime > steps[counter]) {
+        fishMatrix = translate(fishMatrix, vec3(direction * 0.5f, 0.0f, 0.0f));
+        fishMatrix = rotate(fishMatrix, direction * PI / 2.0f * stepTime(currentTime, steps[counter], stepTimes[counter]), vec3(0.0f, 1.0f, 0.0f));
+        fishMatrix = translate(fishMatrix, vec3(-direction * 0.5f, 0.0f, 0.0f));
+        counter++;
+    }
+    if (currentTime > steps[counter]) {
+        fishMatrix = translate(fishMatrix, vec3(0.0f, 0.0f, (C_AQUARIUM_DEPTH - 1.6f) * stepTime(currentTime, steps[counter], stepTimes[counter])));
+        counter++;
+    }
+    if (currentTime > steps[counter]) {
+        fishMatrix = translate(fishMatrix, vec3(direction * 0.5f, 0.0f, 0.0f));
+        fishMatrix = rotate(fishMatrix, direction * PI / 2.0f * stepTime(currentTime, steps[counter], stepTimes[counter]), vec3(0.0f, 1.0f, 0.0f));
+        fishMatrix = translate(fishMatrix, vec3(-direction * 0.5f, 0.0f, 0.0f));
+        counter++;
+    }
+    if (currentTime > steps[counter]) {
+        fishMatrix = translate(fishMatrix, vec3(0.0f, 0.0f, (C_AQUARIUM_WIDTH - 1.6f) * stepTime(currentTime, steps[counter], stepTimes[counter])));
+        counter++;
+    }
+    if (currentTime > steps[counter]) {
+        fishMatrix = translate(fishMatrix, vec3(direction * 0.5f, 0.0f, 0.0f));
+        fishMatrix = rotate(fishMatrix, direction * PI / 2.0f * stepTime(currentTime, steps[counter], stepTimes[counter]), vec3(0.0f, 1.0f, 0.0f));
+        fishMatrix = translate(fishMatrix, vec3(-direction * 0.5f, 0.0f, 0.0f));
+        counter++;
+    }
+    if (currentTime > steps[counter]) {
+        fishMatrix = translate(fishMatrix, vec3(0.0f, 0.0f, (C_AQUARIUM_DEPTH - 1.6f) * stepTime(currentTime, steps[counter], stepTimes[counter])));
         counter++;
     }
     if (currentTime > steps[counter]) {
