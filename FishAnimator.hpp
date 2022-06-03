@@ -5,8 +5,7 @@
 
 enum AnimationType {
     FULL,
-    WIDTH,
-    DIAGONAL
+    WIDTH
 };
 
 enum AnimationDir {
@@ -19,7 +18,6 @@ class FishAnimator {
     double time;
     glm::mat4 getAnimationFull(glm::mat4 initMatrix, AnimationDir direction);
     glm::mat4 getAnimationWidth(glm::mat4 initMatrix, AnimationDir direction);
-    glm::mat4 getAnimationDiagonal(glm::mat4 initMatrix, AnimationDir direction);
 
    public:
     FishAnimator();
