@@ -267,16 +267,19 @@ glm::mat4 aquariumDraw(glm::mat4 matrix) {
         glVertexAttribPointer(spLambert->a("vertex"), 4, GL_FLOAT, false, 0, &(aquariumModel[i].vertices)[0]);
         glEnableVertexAttribArray(spLambert->a("normal"));
         glVertexAttribPointer(spLambert->a("normal"), 4, GL_FLOAT, false, 0, &(aquariumModel[i].normals)[0]);
-        // glEnableVertexAttribArray(spLambert->a("texCoord"));
-        // glVertexAttribPointer(spLambert->a("texCoord"), 2, GL_FLOAT, false, 0, &fish.texCoord[0]);
-
-        // glActiveTexture(GL_TEXTURE0);
-        // glBindTexture(GL_TEXTURE_2D, textureLoader.getTexture(fish.textureId));
-        // glUniform1i(spLambert->u("tex"), 0);
+        // if (aquariumModel[i].textureAvailable) {
+        //     glEnableVertexAttribArray(spLambertTextured->a("texCoord"));
+        //     glVertexAttribPointer(spLambertTextured->a("texCoord"), 2, GL_FLOAT, false, 0, &(aquariumModel[i].texcoords)[0]);
+        //     glActiveTexture(GL_TEXTURE0);
+        //     glBindTexture(GL_TEXTURE_2D, aquariumModel[i].texture);
+        //     glUniform1i(spLambertTextured->u("tex"), 0);
+        // }
         glDrawArrays(GL_TRIANGLES, 0, aquariumModel[i].vertices.size() / 4);
         glDisableVertexAttribArray(spLambert->a("vertex"));
         glDisableVertexAttribArray(spLambert->a("normal"));
-        // glDisableVertexAttribArray(spLambert->a("texCoord"));
+        // if (aquariumModel[i].textureAvailable) {
+        //     glDisableVertexAttribArray(spLambertTextured->a("texCoord"));
+        // }
     }
 
     return matrix;
