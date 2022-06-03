@@ -184,27 +184,6 @@ void walls(glm:: mat4 initMatrix){
 glm::mat4 table(glm::mat4 initMatrix) {
     using namespace glm;
 
-    mat4 legMatrix = translate(initMatrix, vec3(0.0f, -1.0f, 0.0f));
-    mat4 scaledLegMatrix = scale(legMatrix, vec3(0.125f, (C_TABLE_HEIGHT - 0.25f) / 2.0f, 0.125f));
-
-    activateLambertShader();
-    glUniform4f(spLambert->u("color"), 1, 1, 1, 1);
-    glUniformMatrix4fv(spLambert->u("M"), 1, false, value_ptr(scaledLegMatrix));
-    Models::cube.drawSolid();
-
-    mat4 tableMatrix = legMatrix;
-    tableMatrix = translate(tableMatrix, vec3(0.0f, C_TABLE_HEIGHT / 2.0f, 0.0f));
-    mat4 scaledTableMatrix = scale(tableMatrix, vec3((C_AQUARIUM_WIDTH / 2.0f) + 0.1f, 0.125f, (C_AQUARIUM_WIDTH / 2.0f) + 0.1f));
-    glUniformMatrix4fv(spLambert->u("M"), 1, false, value_ptr(scaledTableMatrix));
-    Models::cube.drawSolid();
-
-    return translate(tableMatrix, vec3(0.0f, 0.125f, 0.0f));
-}
-
-// returns matrix on the top of the table, at center point
-glm::mat4 newTable(glm::mat4 initMatrix) {
-    using namespace glm;
-
     mat4 matrix = scale(initMatrix, vec3(C_TABLE_SCALE_FACTOR));
 
     activateLambertShader();
@@ -270,7 +249,7 @@ glm::mat4 drawSingleFish(glm::mat4 position, FishType fishType, float scaleFacto
     return fishMatrix;
 }
 
-glm::mat4 newAquariumDraw(glm::mat4 matrix) {
+glm::mat4 aquariumDraw(glm::mat4 matrix) {
     using namespace glm;
 
     mat4 m = scale(matrix, vec3(C_AQUARIUM_SCALE_FACTOR));
@@ -386,11 +365,10 @@ void drawScene(GLFWwindow* window, float angle) {
     glm::mat4 floorMatrix = floor(unitMatrix);
     walls(unitMatrix);
 
-    // glm::mat4 tableMatrix = table(unitMatrix);
-    glm::mat4 tableMatrix = newTable(floorMatrix);
+    glm::mat4 tableMatrix = table(floorMatrix);
     glm::mat4 aquariumMatrix = aquariumNoDraw(tableMatrix);  // I have to draw the aquarium at the end because of the alpha channel
     drawFish(aquariumMatrix);
-    newAquariumDraw(tableMatrix);
+    aquariumDraw(tableMatrix);
 
     glfwSwapBuffers(window);  // Copy back buffer to the front buffer
 }
