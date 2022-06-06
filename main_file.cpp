@@ -500,7 +500,7 @@ int main(void) {
 
         double time = glfwGetTime();
 
-        pos += ws * (float)time * mdir * 4.0f;
+        pos += ws * (float)time * mdir * C_MOVEMENT_SPEED;
 
         if (abs(pos.x) < C_AQUARIUM_WIDTH + 0.1f && abs(pos.z) < C_AQUARIUM_DEPTH + 0.1f) {
             pos = vec3(pos_prev.x, pos.y, pos_prev.z);
