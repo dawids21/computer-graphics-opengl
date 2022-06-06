@@ -74,12 +74,12 @@ void key_callback(GLFWwindow* window, int key,
                   int scancode, int action, int mod)
  {
 	if (action == GLFW_PRESS) {
-		if (key == GLFW_KEY_LEFT) speed_y = 2;
-		if (key == GLFW_KEY_RIGHT) speed_y = -2;
-		if (key == GLFW_KEY_PAGE_UP) speed_x = 2;
-		if (key == GLFW_KEY_PAGE_DOWN) speed_x = -2;
-		if (key == GLFW_KEY_UP) ws = 2;
-		if (key == GLFW_KEY_DOWN) ws= -2;
+		if (key == GLFW_KEY_LEFT) speed_y = 1;
+		if (key == GLFW_KEY_RIGHT) speed_y = -1;
+		if (key == GLFW_KEY_PAGE_UP) speed_x = 1;
+		if (key == GLFW_KEY_PAGE_DOWN) speed_x = -1;
+		if (key == GLFW_KEY_UP) ws = 1;
+		if (key == GLFW_KEY_DOWN) ws= -1;
 	}
 	if (action == GLFW_RELEASE) {
 		if (key == GLFW_KEY_LEFT) speed_y = 0;
@@ -112,6 +112,9 @@ GLuint readTexture(const char* filename) {
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    			glTexParameteri(GL_TEXTURE_2D,
+				GL_TEXTURE_MIN_FILTER,
+				GL_NEAREST_MIPMAP_LINEAR);
 
 
 	return tex;
@@ -497,7 +500,7 @@ int main(void) {
 
         double time = glfwGetTime();
 
-        pos += ws * (float)time * mdir;
+        pos += ws * (float)time * mdir * 4.0f;
 
         if (abs(pos.x) < C_AQUARIUM_WIDTH + 0.1f && abs(pos.z) < C_AQUARIUM_DEPTH + 0.1f) {
             pos = vec3(pos_prev.x, pos.y, pos_prev.z);
