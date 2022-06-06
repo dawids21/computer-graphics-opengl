@@ -134,7 +134,7 @@ void initOpenGLProgram(GLFWwindow* window) {
     tableModel = objLoader.get();
     glDisable(GL_CULL_FACE);
     glfwSetKeyCallback(window, key_callback);
-    tex = readTexture("floor.png");
+    tex = readTexture("./models/floor/floor.png");
 }
 
 // Release resources allocated by the program
@@ -172,41 +172,45 @@ void activateLambertTexturedShader() {
     glUniformMatrix4fv(spLambertTextured->u("V"), 1, false, glm::value_ptr(V));
 }
 
+void activateTexturedShader() {
+    glm::mat4 P = glm::perspective(glm::radians(50.0f), 1.0f, 1.0f, 50.0f);
+    glm::mat4 V = glm::lookAt(pos, pos + dir, glm::vec3(0.0f, 1.0f, 0.0f));
+
+    spTextured->use();
+    glUniformMatrix4fv(spTextured->u("P"), 1, false, glm::value_ptr(P));
+    glUniformMatrix4fv(spTextured->u("V"), 1, false, glm::value_ptr(V));
+}
 
 mat4 floor(glm::mat4 initMatrix) {
-    activateConstantShader();
+    // activateConstantShader();
+
+    // mat4 floorMatrix = translate(initMatrix, vec3(0, 0, 0));
+    // mat4 scaledFloorMatrix = scale(floorMatrix, vec3(C_ROOM_SIZE, 0.1f, C_ROOM_SIZE));
+    // glUniform4f(spConstant->u("color"), 0.5, 0.5, 0.5, 1);
+    // glUniformMatrix4fv(spConstant->u("M"), 1, false, value_ptr(scaledFloorMatrix));
+    // Models::cube.drawSolid();
+
+    activateTexturedShader();
 
     mat4 floorMatrix = translate(initMatrix, vec3(0, 0, 0));
     mat4 scaledFloorMatrix = scale(floorMatrix, vec3(C_ROOM_SIZE, 0.1f, C_ROOM_SIZE));
-    glUniform4f(spConstant->u("color"), 0.5, 0.5, 0.5, 1);
-    glUniformMatrix4fv(spConstant->u("M"), 1, false, value_ptr(scaledFloorMatrix));
-    Models::cube.drawSolid();
-    
 
+    glUniformMatrix4fv(spTextured->u("M"), 1, false, glm::value_ptr(scaledFloorMatrix));
 
-    // spLambertTextured->use();
-	
-	// glUniformMatrix4fv(spLambertTextured->u("M"), 1, false, glm::value_ptr(floorMatrix));
-    // glUniformMatrix4fv(spLambertTextured->u("P"), 1, false, glm::value_ptr(initMatrix));
-    // glUniformMatrix4fv(spLambertTextured->u("V"), 1, false, glm::value_ptr(initMatrix));
+    glEnableVertexAttribArray(spTextured->a("vertex"));
+    glVertexAttribPointer(spTextured->a("vertex"), 4, GL_FLOAT, false, 0, myCubeVertices);
 
+    glEnableVertexAttribArray(spTextured->a("texCoord"));
+    glVertexAttribPointer(spTextured->a("texCoord"), 2, GL_FLOAT, false, 0, myCubeTexCoords);
 
-	// glEnableVertexAttribArray(spLambertTextured->a("vertex"));
-	// glVertexAttribPointer(spLambertTextured->a("vertex"), 4, GL_FLOAT, false, 0, myCubeVertices);
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glUniform1i(spTextured->u("tex"), 0);
 
-	// glEnableVertexAttribArray(spLambertTextured->a("texCoord"));
-	// glVertexAttribPointer(spLambertTextured->a("texCoord"), 2, GL_FLOAT, false, 0, myCubeTexCoords);
+    glDrawArrays(GL_TRIANGLES, 18, 6);
 
-	// glActiveTexture(GL_TEXTURE0);
-	// glBindTexture(GL_TEXTURE_2D, tex);
-	// glUniform1i(spLambertTextured->u("tex"), 0);
-
-    			
-
-	// glDrawArrays(GL_TRIANGLES, 18, 6);
-
-	// glDisableVertexAttribArray(spLambertTextured->a("vertex"));
-	// glDisableVertexAttribArray(spLambertTextured->a("color"));
+    glDisableVertexAttribArray(spTextured->a("vertex"));
+    glDisableVertexAttribArray(spTextured->a("texCoord"));
 
     return floorMatrix;
 }
