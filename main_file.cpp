@@ -16,6 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define GLM_FORCE_RADIANS
 
 #include <GL/glew.h>
+#include <GL/gl.h>
 #include <GLFW/glfw3.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -36,8 +37,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "glm/gtc/type_ptr.hpp"
 #include "lodepng.h"
 #include "shaderprogram.h"
+#include "myCube.h"
 
 using namespace glm;
+
+
 
 float speed = 0;  //[radians/s]
 
@@ -45,6 +49,9 @@ float speed = 0;  //[radians/s]
 float speed_y = 0; //[radiany/s]
 float speed_x = 0; //[radiany/s]
 float ws = 0;
+
+
+GLuint tex;
 
 vec3 pos = vec3(0, C_PERSON_HEIGHT, -5);
 vec3 pos_prev = vec3(0, C_PERSON_HEIGHT, -5);
@@ -55,6 +62,7 @@ FishAnimator fishAnimator;
 
 std::vector<ObjModel> aquariumModel;
 std::vector<ObjModel> tableModel;
+
 
 // Error processing callback procedure
 void error_callback(int error, const char* description) {
@@ -84,6 +92,30 @@ void key_callback(GLFWwindow* window, int key,
 		if (key == GLFW_KEY_PAGE_DOWN) speed_x = -0;
 	}
 }
+GLuint readTexture(const char* filename) {
+	GLuint tex;
+	glActiveTexture(GL_TEXTURE0);
+
+	//Read into computers memory
+	std::vector<unsigned char> image;   //Allocate memory 
+	unsigned width, height;   //Variables for image size
+	//Read the image
+	unsigned error = lodepng::decode(image, width, height, filename);
+
+	//Import to graphics card memory
+	glGenTextures(1, &tex); //Initialize one handle
+	glBindTexture(GL_TEXTURE_2D, tex); //Activate handle
+	//Copy image to graphics cards memory reprezented by the active handle
+	glTexImage2D(GL_TEXTURE_2D, 0, 4, width, height, 0,
+		GL_RGBA, GL_UNSIGNED_BYTE, (unsigned char*)image.data());
+	glGenerateMipmap(GL_TEXTURE_2D);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+
+	return tex;
+}
 
 // Initialization code procedure
 void initOpenGLProgram(GLFWwindow* window) {
@@ -102,6 +134,7 @@ void initOpenGLProgram(GLFWwindow* window) {
     tableModel = objLoader.get();
     glDisable(GL_CULL_FACE);
     glfwSetKeyCallback(window, key_callback);
+    tex = readTexture("floor.png");
 }
 
 // Release resources allocated by the program
@@ -139,6 +172,7 @@ void activateLambertTexturedShader() {
     glUniformMatrix4fv(spLambertTextured->u("V"), 1, false, glm::value_ptr(V));
 }
 
+
 mat4 floor(glm::mat4 initMatrix) {
     activateConstantShader();
 
@@ -147,6 +181,33 @@ mat4 floor(glm::mat4 initMatrix) {
     glUniform4f(spConstant->u("color"), 0.5, 0.5, 0.5, 1);
     glUniformMatrix4fv(spConstant->u("M"), 1, false, value_ptr(scaledFloorMatrix));
     Models::cube.drawSolid();
+    
+
+
+    // spLambertTextured->use();
+	
+	// glUniformMatrix4fv(spLambertTextured->u("M"), 1, false, glm::value_ptr(floorMatrix));
+    // glUniformMatrix4fv(spLambertTextured->u("P"), 1, false, glm::value_ptr(initMatrix));
+    // glUniformMatrix4fv(spLambertTextured->u("V"), 1, false, glm::value_ptr(initMatrix));
+
+
+	// glEnableVertexAttribArray(spLambertTextured->a("vertex"));
+	// glVertexAttribPointer(spLambertTextured->a("vertex"), 4, GL_FLOAT, false, 0, myCubeVertices);
+
+	// glEnableVertexAttribArray(spLambertTextured->a("texCoord"));
+	// glVertexAttribPointer(spLambertTextured->a("texCoord"), 2, GL_FLOAT, false, 0, myCubeTexCoords);
+
+	// glActiveTexture(GL_TEXTURE0);
+	// glBindTexture(GL_TEXTURE_2D, tex);
+	// glUniform1i(spLambertTextured->u("tex"), 0);
+
+    			
+
+	// glDrawArrays(GL_TRIANGLES, 18, 6);
+
+	// glDisableVertexAttribArray(spLambertTextured->a("vertex"));
+	// glDisableVertexAttribArray(spLambertTextured->a("color"));
+
     return floorMatrix;
 }
 
