@@ -5,7 +5,7 @@
 
 ## Miłosz
 - [ ] podłoga z patternem do chodzenia
-- [ ] pomieszczenie ze ścianami
+- [x] pomieszczenie ze ścianami
 - [ ] piasek
 - [ ] niebo 
 
