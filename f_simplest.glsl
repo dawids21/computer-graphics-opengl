@@ -19,5 +19,5 @@ void main(void) {
     rv = pow(rv, 25); // change 25 until it looks good
 
 	//pixelColor = i_color * nl + rv;
-	pixelColor = i_color
+	pixelColor = i_color;
 }

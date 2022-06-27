@@ -1,23 +1,37 @@
 #version 330
 
-in vec4 i_color;
-in vec4 l;
-in vec4 n;
-in vec4 v;
-
 out vec4 pixelColor; //Output variable. Almost final pixel color.
 
-void main(void) {
+//Varying variables
+in vec4 ic;
+in vec4 n;
+in vec4 l;
+in vec4 v;
+in vec2 iTexCoord;
+in vec4 i_kd;
+in vec4 i_ka;
+in vec4 i_ks;
+in float i_alpha;
 
+uniform sampler2D textureMap; // sampler -> texturing unit
+
+void main(void) {
+	//Normalized, interpolated vectors
 	vec4 ml = normalize(l);
 	vec4 mn = normalize(n);
 	vec4 mv = normalize(v);
-
+	//Reflected vector
 	vec4 mr = reflect(-ml, mn);
-	float nl = clamp(dot(mn, ml), 0, 1);
-    float rv = clamp(dot(mr, mv), 0, 1);
-    rv = pow(rv, 25); // change 25 until it looks good
 
-	//pixelColor = i_color * nl + rv;
-	pixelColor = i_color
+	vec4 texColor=texture(textureMap,iTexCoord);
+
+	//Surface parameters
+	vec4 kd = texColor * i_kd;
+	vec4 ks = i_ks;
+	vec4 ka = i_ka;
+
+	//Lighting model computation
+	float nl = clamp(dot(mn, ml), 0, 1);
+	float rv = pow(clamp(dot(mr, mv), 0, 1), i_alpga);
+	pixelColor = vec4(ka.rgb * vec3(0.1f), 0) + vec4(kd.rgb * nl, kd.a) + vec4(ks.rgb * rv, 0);
 }

@@ -272,28 +272,32 @@ glm::mat4 table(glm::mat4 initMatrix) {
 
     mat4 matrix = scale(initMatrix, vec3(C_TABLE_SCALE_FACTOR));
 
-    activateLambertTexturedShader();
-    glUniformMatrix4fv(spLambertTextured->u("M"), 1, false, value_ptr(matrix));
+    activateSimplestTexturedShader();
+    glUniformMatrix4fv(spSimplestTextured->u("M"), 1, false, value_ptr(matrix));
 
     for (int i = tableModel.size() - 1; i >= 0; i--) {
-        RGB color = tableModel[i].diffuse;
-        glUniform4f(spLambertTextured->u("color"), color.r, color.g, color.b, tableModel[i].dissolve);
-        glEnableVertexAttribArray(spLambertTextured->a("vertex"));
-        glVertexAttribPointer(spLambertTextured->a("vertex"), 4, GL_FLOAT, false, 0, &(tableModel[i].vertices)[0]);
-        glEnableVertexAttribArray(spLambertTextured->a("normal"));
-        glVertexAttribPointer(spLambertTextured->a("normal"), 4, GL_FLOAT, false, 0, &(tableModel[i].normals)[0]);
+        RGB kd = tableModel[i].diffuse;
+        RGB ka = tableModel[i].ambient;
+        RGB ks = tableModel[i].specular;
+        glUniform4f(spSimplestTextured->u("kd"), kd.r, kd.g, kd.b, tableModel[i].dissolve);
+        glUniform4f(spSimplestTextured->u("ka"), ka.r, ka.g, ka.b, 0.0f);
+        glUniform4f(spSimplestTextured->u("ks"), ks.r, ks.g, ks.b, 0.0f);
+        glEnableVertexAttribArray(spSimplestTextured->a("vertex"));
+        glVertexAttribPointer(spSimplestTextured->a("vertex"), 4, GL_FLOAT, false, 0, &(tableModel[i].vertices)[0]);
+        glEnableVertexAttribArray(spSimplestTextured->a("normal"));
+        glVertexAttribPointer(spSimplestTextured->a("normal"), 4, GL_FLOAT, false, 0, &(tableModel[i].normals)[0]);
         if (tableModel[i].textureAvailable) {
-            glEnableVertexAttribArray(spLambertTextured->a("texCoord"));
-            glVertexAttribPointer(spLambertTextured->a("texCoord"), 2, GL_FLOAT, false, 0, &(tableModel[i].texcoords)[0]);
+            glEnableVertexAttribArray(spSimplestTextured->a("texCoord"));
+            glVertexAttribPointer(spSimplestTextured->a("texCoord"), 2, GL_FLOAT, false, 0, &(tableModel[i].texcoords)[0]);
             glActiveTexture(GL_TEXTURE0);
             glBindTexture(GL_TEXTURE_2D, tableModel[i].texture);
-            glUniform1i(spLambertTextured->u("tex"), 0);
+            glUniform1i(spSimplestTextured->u("textureMap"), 0);
         }
         glDrawArrays(GL_TRIANGLES, 0, tableModel[i].vertices.size() / 4);
-        glDisableVertexAttribArray(spLambertTextured->a("vertex"));
-        glDisableVertexAttribArray(spLambertTextured->a("normal"));
+        glDisableVertexAttribArray(spSimplestTextured->a("vertex"));
+        glDisableVertexAttribArray(spSimplestTextured->a("normal"));
         if (tableModel[i].textureAvailable) {
-            glDisableVertexAttribArray(spLambertTextured->a("texCoord"));
+            glDisableVertexAttribArray(spSimplestTextured->a("texCoord"));
         }
     }
 
@@ -458,9 +462,9 @@ void drawScene(GLFWwindow* window, float angle) {
     walls(unitMatrix);
 
     glm::mat4 tableMatrix = table(floorMatrix);
-    glm::mat4 aquariumMatrix = aquariumNoDraw(tableMatrix);  // I have to draw the aquarium at the end because of the alpha channel
-    drawFish(aquariumMatrix);
-    aquariumDraw(tableMatrix);
+    // glm::mat4 aquariumMatrix = aquariumNoDraw(tableMatrix);  // I have to draw the aquarium at the end because of the alpha channel
+    // drawFish(aquariumMatrix);
+    // aquariumDraw(tableMatrix);
 
     glfwSwapBuffers(window);  // Copy back buffer to the front buffer
 }
