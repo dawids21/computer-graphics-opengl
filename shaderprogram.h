@@ -40,6 +40,7 @@ extern ShaderProgram *spConstant;
 extern ShaderProgram *spLambert;
 extern ShaderProgram* spLambertTextured;
 extern ShaderProgram* spTextured;
+extern ShaderProgram* spSimplest;
 extern ShaderProgram* spSimplestTextured;
 
 void initShaders();
