@@ -26,8 +26,8 @@ out vec4 i_ks;
 out float i_alpha;
 
 void main(void) {
-    vec4 lp1 = vec4(-5, 5, 0, 1); //light position, world space
-    vec4 lp2 = vec4(5, 5, 0, 1); //light position, world space
+    vec4 lp1 = vec4(-10, 5, 0, 1); //light position, world space
+    vec4 lp2 = vec4(10, 5, 0, 1); //light position, world space
     l1 = normalize(V * lp1 - V * M * vertex); //vector towards the light in eye space
     l2 = normalize(V * lp2 - V * M * vertex); //vector towards the light in eye space
     v = normalize(vec4(0, 0, 0, 1) - V * M * vertex); //vector towards the viewer in eye space

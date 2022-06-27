@@ -203,35 +203,35 @@ void activateSimplestTexturedShader() {
 }
 
 mat4 floor(glm::mat4 initMatrix) {
-    // activateConstantShader();
-
-    // mat4 floorMatrix = translate(initMatrix, vec3(0, 0, 0));
-    // mat4 scaledFloorMatrix = scale(floorMatrix, vec3(C_ROOM_SIZE, 0.1f, C_ROOM_SIZE));
-    // glUniform4f(spConstant->u("color"), 0.5, 0.5, 0.5, 1);
-    // glUniformMatrix4fv(spConstant->u("M"), 1, false, value_ptr(scaledFloorMatrix));
-    // Models::cube.drawSolid();
-
-    activateTexturedShader();
+    activateSimplestTexturedShader();
 
     mat4 floorMatrix = translate(initMatrix, vec3(0, 0, 0));
     mat4 scaledFloorMatrix = scale(floorMatrix, vec3(C_ROOM_SIZE, 0.1f, C_ROOM_SIZE));
 
-    glUniformMatrix4fv(spTextured->u("M"), 1, false, glm::value_ptr(scaledFloorMatrix));
+    glUniformMatrix4fv(spSimplestTextured->u("M"), 1, false, glm::value_ptr(scaledFloorMatrix));
+    glUniform4f(spSimplestTextured->u("kd"), 0.8f, 0.8f, 0.8f, 1.0f);
+    glUniform4f(spSimplestTextured->u("ka"), 1.0f, 1.0f, 1.0f, 0.0f);
+    glUniform4f(spSimplestTextured->u("ks"), 0.2f, 0.2f, 0.2f, 0.0f);
+    glUniform1f(spSimplestTextured->u("alpha"), 20);
 
-    glEnableVertexAttribArray(spTextured->a("vertex"));
-    glVertexAttribPointer(spTextured->a("vertex"), 4, GL_FLOAT, false, 0, myCubeVertices);
+    glEnableVertexAttribArray(spSimplestTextured->a("vertex"));
+    glVertexAttribPointer(spSimplestTextured->a("vertex"), 4, GL_FLOAT, false, 0, myCubeVertices);
 
-    glEnableVertexAttribArray(spTextured->a("texCoord"));
-    glVertexAttribPointer(spTextured->a("texCoord"), 2, GL_FLOAT, false, 0, myCubeTexCoords);
+    glEnableVertexAttribArray(spSimplestTextured->a("normal"));
+    glVertexAttribPointer(spSimplestTextured->a("normal"), 4, GL_FLOAT, false, 0, myCubeNormals);
+
+    glEnableVertexAttribArray(spSimplestTextured->a("texCoord"));
+    glVertexAttribPointer(spSimplestTextured->a("texCoord"), 2, GL_FLOAT, false, 0, myCubeTexCoords);
 
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, tex);
-    glUniform1i(spTextured->u("tex"), 0);
+    glUniform1i(spSimplestTextured->u("tex"), 0);
 
-    glDrawArrays(GL_TRIANGLES, 18, 6);
+    glDrawArrays(GL_TRIANGLES, 0, myCubeVertexCount);
 
-    glDisableVertexAttribArray(spTextured->a("vertex"));
-    glDisableVertexAttribArray(spTextured->a("texCoord"));
+    glDisableVertexAttribArray(spSimplestTextured->a("vertex"));
+    glDisableVertexAttribArray(spSimplestTextured->a("normal"));
+    glDisableVertexAttribArray(spSimplestTextured->a("texCoord"));
 
     return floorMatrix;
 }
@@ -472,7 +472,15 @@ void drawScene(GLFWwindow* window, float angle) {
     glm::mat4 tableMatrix = table(floorMatrix);
     glm::mat4 aquariumMatrix = aquariumNoDraw(tableMatrix);  // I have to draw the aquarium at the end because of the alpha channel
     drawFish(aquariumMatrix);
-    // aquariumDraw(tableMatrix);
+    activateConstantShader();
+    mat4 lightMatrix1 = translate(unitMatrix, vec3(-10, 5, 0));
+    glUniform4f(spConstant->u("color"), 0.7, 0.7, 0.2, 1);
+    glUniformMatrix4fv(spConstant->u("M"), 1, false, value_ptr(lightMatrix1));
+    Models::sphere.drawSolid();
+    mat4 lightMatrix2 = translate(unitMatrix, vec3(10, 5, 0));
+    glUniformMatrix4fv(spConstant->u("M"), 1, false, value_ptr(lightMatrix2));
+    Models::sphere.drawSolid();
+    aquariumDraw(tableMatrix);
 
     glfwSwapBuffers(window);  // Copy back buffer to the front buffer
 }

@@ -30,7 +30,6 @@ vec4 calculateLight(vec4 light, vec4 normal, vec4 view, vec4 kd, vec4 ks, vec4 k
 }
 
 void main(void) {
-	vec4 texColor=texture(textureMap,iTexCoord);
 	vec4 light = calculateLight(l1, n, v, i_kd, i_ks, i_ka, i_alpha) + calculateLight(l2, n, v, i_kd, i_ks, i_ka, i_alpha);
-	pixelColor = light * texColor;
+	pixelColor = light * i_kd;
 }
