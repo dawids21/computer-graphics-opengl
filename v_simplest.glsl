@@ -14,7 +14,8 @@ in vec4 vertex; //Vertex coordinates in model space
 in vec4 normal; //Vertex normal in model space
 
 //Varying variables
-out vec4 l;
+out vec4 l1;
+out vec4 l2;
 out vec4 n;
 out vec4 v;
 out vec4 i_kd;
@@ -23,8 +24,10 @@ out vec4 i_ks;
 out float i_alpha;
 
 void main(void) {
-    vec4 lp = vec4(0, 5, -6, 1); //light position, world space
-    l = normalize(V * lp - V * M * vertex); //vector towards the light in eye space
+    vec4 lp1 = vec4(-5, 5, 0, 1); //light position, world space
+    vec4 lp2 = vec4(5, 5, 0, 1); //light position, world space
+    l1 = normalize(V * lp1 - V * M * vertex); //vector towards the light in eye space
+    l2 = normalize(V * lp2 - V * M * vertex); //vector towards the light in eye space
     v = normalize(vec4(0, 0, 0, 1) - V * M * vertex); //vector towards the viewer in eye space
     n = normalize(V * M * normal); //normal vector in eye space
 
