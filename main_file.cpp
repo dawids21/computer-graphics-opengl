@@ -184,6 +184,15 @@ void activateTexturedShader() {
     glUniformMatrix4fv(spTextured->u("V"), 1, false, glm::value_ptr(V));
 }
 
+void activateSimplestShader() {
+    glm::mat4 P = glm::perspective(glm::radians(50.0f), 1.0f, 1.0f, 50.0f);
+    glm::mat4 V = glm::lookAt(pos, pos + dir, glm::vec3(0.0f, 1.0f, 0.0f));
+
+    spSimplest->use();
+    glUniformMatrix4fv(spSimplest->u("P"), 1, false, glm::value_ptr(P));
+    glUniformMatrix4fv(spSimplest->u("V"), 1, false, glm::value_ptr(V));
+}
+
 mat4 floor(glm::mat4 initMatrix) {
     // activateConstantShader();
 

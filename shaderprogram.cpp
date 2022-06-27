@@ -20,12 +20,14 @@ ShaderProgram *spLambert;
 ShaderProgram *spConstant;
 ShaderProgram* spLambertTextured;
 ShaderProgram* spTextured;
+ShaderProgram* spSimplest;
 
 void initShaders(){
     spLambert=new ShaderProgram("v_lambert.glsl",NULL,"f_lambert.glsl");
     spConstant=new ShaderProgram("v_constant.glsl",NULL,"f_constant.glsl");
     spLambertTextured = new ShaderProgram("v_lamberttextured.glsl", NULL, "f_lamberttextured.glsl");
     spTextured = new ShaderProgram("v_textured.glsl", NULL, "f_textured.glsl");
+    spTextured = new ShaderProgram("v_simplest.glsl", NULL, "f_simplest.glsl");
 }
 
 void freeShaders(){
@@ -33,6 +35,7 @@ void freeShaders(){
     delete spConstant;
     delete spLambertTextured;
     delete spTextured;
+    delete spSimplest;
 }
 
 
