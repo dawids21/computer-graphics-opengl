@@ -318,26 +318,33 @@ glm::mat4 drawSingleFish(glm::mat4 position, FishType fishType, float scaleFacto
     mat4 scaledFishMatrix = scale(fishMatrix, vec3(scaleFactor));
     ObjModel fish = fishLoader.getFish(fishType);
 
-    activateLambertTexturedShader();
-    glUniformMatrix4fv(spLambertTextured->u("M"), 1, false, value_ptr(scaledFishMatrix));
+    activateSimplestTexturedShader();
+    glUniformMatrix4fv(spSimplestTextured->u("M"), 1, false, value_ptr(scaledFishMatrix));
+    RGB kd = fish.diffuse;
+    RGB ka = fish.ambient;
+    RGB ks = fish.specular;
+    glUniform4f(spSimplestTextured->u("kd"), kd.r, kd.g, kd.b, fish.dissolve);
+    glUniform4f(spSimplestTextured->u("ka"), ka.r, ka.g, ka.b, 0.0f);
+    glUniform4f(spSimplestTextured->u("ks"), ks.r, ks.g, ks.b, 0.0f);
+    glUniform1f(spSimplestTextured->u("alpha"), fish.shininess);
 
-    glEnableVertexAttribArray(spLambertTextured->a("vertex"));
-    glVertexAttribPointer(spLambertTextured->a("vertex"), 4, GL_FLOAT, false, 0, &fish.vertices[0]);
-    glEnableVertexAttribArray(spLambertTextured->a("normal"));
-    glVertexAttribPointer(spLambertTextured->a("normal"), 4, GL_FLOAT, false, 0, &fish.normals[0]);
+    glEnableVertexAttribArray(spSimplestTextured->a("vertex"));
+    glVertexAttribPointer(spSimplestTextured->a("vertex"), 4, GL_FLOAT, false, 0, &fish.vertices[0]);
+    glEnableVertexAttribArray(spSimplestTextured->a("normal"));
+    glVertexAttribPointer(spSimplestTextured->a("normal"), 4, GL_FLOAT, false, 0, &fish.normals[0]);
 
     if (fish.textureAvailable) {
-        glEnableVertexAttribArray(spLambertTextured->a("texCoord"));
-        glVertexAttribPointer(spLambertTextured->a("texCoord"), 2, GL_FLOAT, false, 0, &fish.texcoords[0]);
+        glEnableVertexAttribArray(spSimplestTextured->a("texCoord"));
+        glVertexAttribPointer(spSimplestTextured->a("texCoord"), 2, GL_FLOAT, false, 0, &fish.texcoords[0]);
         glActiveTexture(GL_TEXTURE0);
         glBindTexture(GL_TEXTURE_2D, fish.texture);
-        glUniform1i(spLambertTextured->u("tex"), 0);
+        glUniform1i(spSimplestTextured->u("tex"), 0);
     }
     glDrawArrays(GL_TRIANGLES, 0, fish.vertices.size() / 4);
-    glDisableVertexAttribArray(spLambertTextured->a("vertex"));
-    glDisableVertexAttribArray(spLambertTextured->a("normal"));
+    glDisableVertexAttribArray(spSimplestTextured->a("vertex"));
+    glDisableVertexAttribArray(spSimplestTextured->a("normal"));
     if (fish.textureAvailable) {
-        glDisableVertexAttribArray(spLambertTextured->a("texCoord"));
+        glDisableVertexAttribArray(spSimplestTextured->a("texCoord"));
     }
 
     return fishMatrix;
@@ -463,8 +470,8 @@ void drawScene(GLFWwindow* window, float angle) {
     walls(unitMatrix);
 
     glm::mat4 tableMatrix = table(floorMatrix);
-    // glm::mat4 aquariumMatrix = aquariumNoDraw(tableMatrix);  // I have to draw the aquarium at the end because of the alpha channel
-    // drawFish(aquariumMatrix);
+    glm::mat4 aquariumMatrix = aquariumNoDraw(tableMatrix);  // I have to draw the aquarium at the end because of the alpha channel
+    drawFish(aquariumMatrix);
     // aquariumDraw(tableMatrix);
 
     glfwSwapBuffers(window);  // Copy back buffer to the front buffer

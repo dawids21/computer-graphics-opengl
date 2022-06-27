@@ -26,12 +26,16 @@ void main(void) {
 	vec4 texColor=texture(textureMap,iTexCoord);
 
 	//Surface parameters
-	vec4 kd = texColor * i_kd;
+	vec4 kd = i_kd;
 	vec4 ks = i_ks;
 	vec4 ka = i_ka;
 
 	//Lighting model computation
 	float nl = clamp(dot(mn, ml), 0, 1);
 	float rv = pow(clamp(dot(mr, mv), 0, 1), i_alpha);
-	pixelColor = vec4(ka.rgb * vec3(0.1f), 0) + vec4(kd.rgb * nl, kd.a) + vec4(ks.rgb * rv, 0);
+
+	vec4 ambient = vec4(ka.rgb * vec3(0.3f), 0);
+	vec4 diffuse = vec4(kd.rgb * nl, kd.a);
+	vec4 specular = vec4(ks.rgb * rv, 0);
+	pixelColor = (ambient + diffuse + specular) * texColor;
 }
