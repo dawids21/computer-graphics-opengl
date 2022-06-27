@@ -282,6 +282,7 @@ glm::mat4 table(glm::mat4 initMatrix) {
         glUniform4f(spSimplestTextured->u("kd"), kd.r, kd.g, kd.b, tableModel[i].dissolve);
         glUniform4f(spSimplestTextured->u("ka"), ka.r, ka.g, ka.b, 0.0f);
         glUniform4f(spSimplestTextured->u("ks"), ks.r, ks.g, ks.b, 0.0f);
+        glUniform1f(spSimplestTextured->u("alpha"), tableModel[i].shininess);
         glEnableVertexAttribArray(spSimplestTextured->a("vertex"));
         glVertexAttribPointer(spSimplestTextured->a("vertex"), 4, GL_FLOAT, false, 0, &(tableModel[i].vertices)[0]);
         glEnableVertexAttribArray(spSimplestTextured->a("normal"));
