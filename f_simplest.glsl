@@ -18,5 +18,6 @@ void main(void) {
     float rv = clamp(dot(mr, mv), 0, 1);
     rv = pow(rv, 25); // change 25 until it looks good
 
-	pixelColor = i_color * nl + rv;
+	//pixelColor = i_color * nl + rv;
+	pixelColor = i_color
 }
