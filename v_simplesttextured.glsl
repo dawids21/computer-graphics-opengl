@@ -8,6 +8,7 @@ uniform vec4 kd;
 uniform vec4 ka;
 uniform vec4 ks;
 uniform float alpha;
+uniform float ambient;
 
 //Attributes
 in vec4 vertex; //Vertex coordinates in model space
@@ -24,6 +25,7 @@ out vec4 i_kd;
 out vec4 i_ka;
 out vec4 i_ks;
 out float i_alpha;
+out float i_ambient;
 
 void main(void) {
     vec4 lp1 = vec4(-10, 5, 0, 1); //light position, world space
@@ -38,6 +40,7 @@ void main(void) {
     i_ka = ka;
     i_ks = ks;
     i_alpha = alpha;
+    i_ambient = ambient;
 
     gl_Position = P * V * M * vertex;
 }

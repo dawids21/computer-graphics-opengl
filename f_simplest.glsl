@@ -11,6 +11,7 @@ in vec4 i_kd;
 in vec4 i_ka;
 in vec4 i_ks;
 in float i_alpha;
+in float i_ambient;
 
 vec4 calculateLight(vec4 light, vec4 normal, vec4 view, vec4 kd, vec4 ks, vec4 ka, float alpha) {
 	vec4 ml = normalize(light);
@@ -23,7 +24,7 @@ vec4 calculateLight(vec4 light, vec4 normal, vec4 view, vec4 kd, vec4 ks, vec4 k
 	float nl = clamp(dot(mn, ml), 0, 1);
 	float rv = pow(clamp(dot(mr, mv), 0, 1), alpha);
 
-	vec4 ambient = vec4(ka.rgb * vec3(0.2f), 0);
+	vec4 ambient = vec4(ka.rgb * vec3(i_ambient), 0);
 	vec4 diffuse = vec4(kd.rgb * nl, kd.a);
 	vec4 specular = vec4(ks.rgb * rv, 0);
 	return ambient + diffuse + specular;
