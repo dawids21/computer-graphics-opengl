@@ -213,6 +213,7 @@ mat4 floor(glm::mat4 initMatrix) {
     glUniform4f(spSimplestTextured->u("ka"), 1.0f, 1.0f, 1.0f, 0.0f);
     glUniform4f(spSimplestTextured->u("ks"), 0.2f, 0.2f, 0.2f, 0.0f);
     glUniform1f(spSimplestTextured->u("alpha"), 20);
+    glUniform1f(spSimplestTextured->u("ambient"), 0.1f);
 
     glEnableVertexAttribArray(spSimplestTextured->a("vertex"));
     glVertexAttribPointer(spSimplestTextured->a("vertex"), 4, GL_FLOAT, false, 0, myCubeVertices);
@@ -237,31 +238,33 @@ mat4 floor(glm::mat4 initMatrix) {
 }
 
 void walls(glm:: mat4 initMatrix){
-
-    activateConstantShader();
-
+    activateSimplestShader();
     mat4 wallMatrix1 = translate(initMatrix, vec3(0, 0, C_ROOM_SIZE));
     wallMatrix1 = scale(wallMatrix1, vec3(C_ROOM_SIZE, 5.0f, 0.1f));
-    glUniform4f(spLambert->u("color"), 0.2, 0.6, 0.4, 1);
-    glUniformMatrix4fv(spLambert->u("M"), 1, false, value_ptr(wallMatrix1));
+    glUniformMatrix4fv(spSimplest->u("M"), 1, false, glm::value_ptr(wallMatrix1));
+    glUniform4f(spSimplest->u("kd"), 0.2f, 0.6f, 0.4f, 1.0f);
+    glUniform4f(spSimplest->u("ka"), 1.0f, 1.0f, 1.0f, 0.0f);
+    glUniform4f(spSimplest->u("ks"), 0.2f, 0.2f, 0.2f, 0.0f);
+    glUniform1f(spSimplest->u("alpha"), 20);
+    glUniform1f(spSimplest->u("ambient"), 0.1f);
     Models::cube.drawSolid();
 
     mat4 wallMatrix2 = translate(initMatrix, vec3(0, 0, -1 * C_ROOM_SIZE));
     wallMatrix2 = scale(wallMatrix2, vec3(C_ROOM_SIZE, 5.0f, 0.1f));
-    glUniform4f(spLambert->u("color"), 0.2, 0.9, 0.4, 1);
-    glUniformMatrix4fv(spLambert->u("M"), 1, false, value_ptr(wallMatrix2));
+    glUniform4f(spSimplest->u("kd"), 0.2, 0.9, 0.4, 1);
+    glUniformMatrix4fv(spSimplest->u("M"), 1, false, value_ptr(wallMatrix2));
     Models::cube.drawSolid();
 
     mat4 wallMatrix3 = translate(initMatrix, vec3(C_ROOM_SIZE, 0, 0));
     wallMatrix3 = scale(wallMatrix3, vec3(0.1f, 5.0f, C_ROOM_SIZE));
-    glUniform4f(spLambert->u("color"), 0.7, 0.7, 0.4, 1);
-    glUniformMatrix4fv(spLambert->u("M"), 1, false, value_ptr(wallMatrix3));
+    glUniform4f(spSimplest->u("kd"), 0.7, 0.7, 0.4, 1);
+    glUniformMatrix4fv(spSimplest->u("M"), 1, false, value_ptr(wallMatrix3));
     Models::cube.drawSolid();
 
     mat4 wallMatrix4 = translate(initMatrix, vec3(-1 * C_ROOM_SIZE, 0, 0));
     wallMatrix4 = scale(wallMatrix4, vec3(0.1f, 5.0f, C_ROOM_SIZE));
-    glUniform4f(spLambert->u("color"), 0.2, 0.2, 0.4, 1);
-    glUniformMatrix4fv(spLambert->u("M"), 1, false, value_ptr(wallMatrix4));
+    glUniform4f(spSimplest->u("kd"), 0.2, 0.2, 0.4, 1);
+    glUniformMatrix4fv(spSimplest->u("M"), 1, false, value_ptr(wallMatrix4));
     Models::cube.drawSolid();
 
 }
