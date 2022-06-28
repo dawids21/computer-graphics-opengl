@@ -254,7 +254,7 @@ void walls(glm:: mat4 initMatrix){
 
     mat4 wallMatrix3 = translate(initMatrix, vec3(C_ROOM_SIZE, 0, 0));
     wallMatrix3 = scale(wallMatrix3, vec3(0.1f, 5.0f, C_ROOM_SIZE));
-    glUniform4f(spLambert->u("color"), 0.9, 0.9, 0.4, 1);
+    glUniform4f(spLambert->u("color"), 0.7, 0.7, 0.4, 1);
     glUniformMatrix4fv(spLambert->u("M"), 1, false, value_ptr(wallMatrix3));
     Models::cube.drawSolid();
 
@@ -472,6 +472,18 @@ void drawFish(glm::mat4 aquariumMatrix) {
         CCLK);
 }
 
+void drawLamps(glm::mat4 unitMatrix) {
+    using namespace glm;
+    activateConstantShader();
+    mat4 lightMatrix1 = translate(unitMatrix, vec3(-15, 4, 0));
+    glUniform4f(spConstant->u("color"), 0.9, 0.9, 0.2, 1);
+    glUniformMatrix4fv(spConstant->u("M"), 1, false, value_ptr(lightMatrix1));
+    Models::sphere.drawSolid();
+    mat4 lightMatrix2 = translate(unitMatrix, vec3(15, 4, 0));
+    glUniformMatrix4fv(spConstant->u("M"), 1, false, value_ptr(lightMatrix2));
+    Models::sphere.drawSolid();
+}
+
 // Drawing procedure
 void drawScene(GLFWwindow* window, float angle) {
     //************Place any code here that draws something inside the window******************l
@@ -486,14 +498,7 @@ void drawScene(GLFWwindow* window, float angle) {
     glm::mat4 tableMatrix = table(floorMatrix);
     glm::mat4 aquariumMatrix = aquariumNoDraw(tableMatrix);  // I have to draw the aquarium at the end because of the alpha channel
     drawFish(aquariumMatrix);
-    activateConstantShader();
-    mat4 lightMatrix1 = translate(unitMatrix, vec3(-10, 5, 0));
-    glUniform4f(spConstant->u("color"), 0.7, 0.7, 0.2, 1);
-    glUniformMatrix4fv(spConstant->u("M"), 1, false, value_ptr(lightMatrix1));
-    Models::sphere.drawSolid();
-    mat4 lightMatrix2 = translate(unitMatrix, vec3(10, 5, 0));
-    glUniformMatrix4fv(spConstant->u("M"), 1, false, value_ptr(lightMatrix2));
-    Models::sphere.drawSolid();
+    drawLamps(unitMatrix);
     aquariumDraw(tableMatrix);
 
     glfwSwapBuffers(window);  // Copy back buffer to the front buffer
