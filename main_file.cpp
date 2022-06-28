@@ -517,7 +517,7 @@ int main(void) {
         exit(EXIT_FAILURE);
     }
 
-    window = glfwCreateWindow(500, 500, "OpenGL", NULL, NULL);  // Create a window 500pxx500px titled "OpenGL" and an OpenGL context associated with it.
+    window = glfwCreateWindow(900, 900, "Aquarium", NULL, NULL);
 
     if (!window)  // If no window is opened then close the program
     {
