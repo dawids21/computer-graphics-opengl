@@ -213,7 +213,7 @@ mat4 floor(glm::mat4 initMatrix) {
     glUniform4f(spSimplestTextured->u("ka"), 1.0f, 1.0f, 1.0f, 0.0f);
     glUniform4f(spSimplestTextured->u("ks"), 0.2f, 0.2f, 0.2f, 0.0f);
     glUniform1f(spSimplestTextured->u("alpha"), 20);
-    glUniform1f(spSimplestTextured->u("ambient"), 0.1f);
+    glUniform1f(spSimplestTextured->u("ambient"), 0.05f);
 
     glEnableVertexAttribArray(spSimplestTextured->a("vertex"));
     glVertexAttribPointer(spSimplestTextured->a("vertex"), 4, GL_FLOAT, false, 0, myCubeVertices);
@@ -246,7 +246,7 @@ void walls(glm:: mat4 initMatrix){
     glUniform4f(spSimplest->u("ka"), 1.0f, 1.0f, 1.0f, 0.0f);
     glUniform4f(spSimplest->u("ks"), 0.2f, 0.2f, 0.2f, 0.0f);
     glUniform1f(spSimplest->u("alpha"), 20);
-    glUniform1f(spSimplest->u("ambient"), 0.1f);
+    glUniform1f(spSimplest->u("ambient"), 0.05f);
     Models::cube.drawSolid();
 
     mat4 wallMatrix2 = translate(initMatrix, vec3(0, 0, -1 * C_ROOM_SIZE));
@@ -286,7 +286,7 @@ glm::mat4 table(glm::mat4 initMatrix) {
         glUniform4f(spSimplestTextured->u("ka"), ka.r, ka.g, ka.b, 0.0f);
         glUniform4f(spSimplestTextured->u("ks"), ks.r, ks.g, ks.b, 0.0f);
         glUniform1f(spSimplestTextured->u("alpha"), tableModel[i].shininess);
-        glUniform1f(spSimplestTextured->u("ambient"), 0.2f);
+        glUniform1f(spSimplestTextured->u("ambient"), 0.05f);
         glEnableVertexAttribArray(spSimplestTextured->a("vertex"));
         glVertexAttribPointer(spSimplestTextured->a("vertex"), 4, GL_FLOAT, false, 0, &(tableModel[i].vertices)[0]);
         glEnableVertexAttribArray(spSimplestTextured->a("normal"));
@@ -331,7 +331,7 @@ glm::mat4 drawSingleFish(glm::mat4 position, FishType fishType, float scaleFacto
     glUniform4f(spSimplestTextured->u("ka"), ka.r, ka.g, ka.b, 0.0f);
     glUniform4f(spSimplestTextured->u("ks"), ks.r, ks.g, ks.b, 0.0f);
     glUniform1f(spSimplestTextured->u("alpha"), fish.shininess);
-    glUniform1f(spSimplestTextured->u("ambient"), 0.2f);
+    glUniform1f(spSimplestTextured->u("ambient"), 0.05f);
 
     glEnableVertexAttribArray(spSimplestTextured->a("vertex"));
     glVertexAttribPointer(spSimplestTextured->a("vertex"), 4, GL_FLOAT, false, 0, &fish.vertices[0]);
@@ -377,7 +377,7 @@ glm::mat4 aquariumDraw(glm::mat4 matrix) {
         glUniform4f(shader->u("ka"), ka.r, ka.g, ka.b, 0.0f);
         glUniform4f(shader->u("ks"), ks.r, ks.g, ks.b, 0.0f);
         glUniform1f(shader->u("alpha"), aquariumModel[i].shininess);
-        glUniform1f(shader->u("ambient"), 0.3f);
+        glUniform1f(shader->u("ambient"), 0.15f);
         glEnableVertexAttribArray(shader->a("vertex"));
         glVertexAttribPointer(shader->a("vertex"), 4, GL_FLOAT, false, 0, &(aquariumModel[i].vertices)[0]);
         glEnableVertexAttribArray(shader->a("normal"));
@@ -414,7 +414,7 @@ void drawFish(glm::mat4 aquariumMatrix) {
         FULL_DEPTH,
         CCLK);
     drawSingleFish(
-        rotate(translate(aquariumMatrix, vec3((-C_AQUARIUM_WIDTH / 2.0f) + 0.8f, 0.6f, (C_AQUARIUM_DEPTH / 2.0f) - 0.3f)), PI / 2, vec3(0.0f, 1.0f, 0.0f)),
+        rotate(translate(aquariumMatrix, vec3((-C_AQUARIUM_WIDTH / 2.0f) + 0.8f, 0.3f, (C_AQUARIUM_DEPTH / 2.0f) - 0.3f)), PI / 2, vec3(0.0f, 1.0f, 0.0f)),
         GOLD,
         0.08f,
         FULL_WIDTH,
@@ -478,11 +478,11 @@ void drawFish(glm::mat4 aquariumMatrix) {
 void drawLamps(glm::mat4 unitMatrix) {
     using namespace glm;
     activateConstantShader();
-    mat4 lightMatrix1 = translate(unitMatrix, vec3(-15, 4, 0));
+    mat4 lightMatrix1 = translate(unitMatrix, vec3(-C_ROOM_SIZE, 4, 0));
     glUniform4f(spConstant->u("color"), 0.9, 0.9, 0.2, 1);
     glUniformMatrix4fv(spConstant->u("M"), 1, false, value_ptr(lightMatrix1));
     Models::sphere.drawSolid();
-    mat4 lightMatrix2 = translate(unitMatrix, vec3(15, 4, 0));
+    mat4 lightMatrix2 = translate(unitMatrix, vec3(C_ROOM_SIZE, 4, 0));
     glUniformMatrix4fv(spConstant->u("M"), 1, false, value_ptr(lightMatrix2));
     Models::sphere.drawSolid();
 }
