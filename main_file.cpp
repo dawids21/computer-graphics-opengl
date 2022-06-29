@@ -52,6 +52,7 @@ float ws = 0;
 
 
 GLuint tex;
+GLuint tex2;
 
 vec3 pos = vec3(0, C_PERSON_HEIGHT, -5);
 vec3 pos_prev = vec3(0, C_PERSON_HEIGHT, -5);
@@ -138,6 +139,7 @@ void initOpenGLProgram(GLFWwindow* window) {
     glDisable(GL_CULL_FACE);
     glfwSetKeyCallback(window, key_callback);
     tex = readTexture("./models/floor/floor.png");
+    tex2 = readTexture("./models/walls/wall.png");
 }
 
 // Release resources allocated by the program
@@ -238,30 +240,48 @@ mat4 floor(glm::mat4 initMatrix) {
 }
 
 void walls(glm:: mat4 initMatrix){
-    activateSimplestShader();
-    mat4 wallMatrix1 = translate(initMatrix, vec3(0, 0, C_ROOM_SIZE));
-    wallMatrix1 = scale(wallMatrix1, vec3(C_ROOM_SIZE, 5.0f, 0.1f));
-    glUniformMatrix4fv(spSimplest->u("M"), 1, false, glm::value_ptr(wallMatrix1));
-    glUniform4f(spSimplest->u("kd"), 0.2f, 0.6f, 0.4f, 1.0f);
-    glUniform4f(spSimplest->u("ka"), 1.0f, 1.0f, 1.0f, 0.0f);
-    glUniform4f(spSimplest->u("ks"), 0.2f, 0.2f, 0.2f, 0.0f);
-    glUniform1f(spSimplest->u("alpha"), 20);
-    glUniform1f(spSimplest->u("ambient"), 0.1f);
-    Models::cube.drawSolid();
+    activateSimplestTexturedShader();
+    mat4 wallMatrix1 = translate(initMatrix, vec3(0, 5, C_ROOM_SIZE));
+    wallMatrix1 = scale(wallMatrix1, vec3(C_ROOM_SIZE, 10.0f, 0.1f));
+    
+    glUniformMatrix4fv(spSimplestTextured->u("M"), 1, false, glm::value_ptr(wallMatrix1));
+    glUniform4f(spSimplestTextured->u("kd"), 0.8f, 0.8f, 0.8f, 1.0f);   //0.2f, 0.6f, 0.4f, 1.0f
+    glUniform4f(spSimplestTextured->u("ka"), 1.0f, 1.0f, 1.0f, 0.0f);
+    glUniform4f(spSimplestTextured->u("ks"), 0.2f, 0.2f, 0.2f, 0.0f);
+    glUniform1f(spSimplestTextured->u("alpha"), 20);
+    glUniform1f(spSimplestTextured->u("ambient"), 0.1f);
+    glEnableVertexAttribArray(spSimplestTextured->a("vertex"));
+    glVertexAttribPointer(spSimplestTextured->a("vertex"), 4, GL_FLOAT, false, 0, myCubeVertices);
 
-    mat4 wallMatrix2 = translate(initMatrix, vec3(0, 0, -1 * C_ROOM_SIZE));
-    wallMatrix2 = scale(wallMatrix2, vec3(C_ROOM_SIZE, 5.0f, 0.1f));
+    glEnableVertexAttribArray(spSimplestTextured->a("normal"));
+    glVertexAttribPointer(spSimplestTextured->a("normal"), 4, GL_FLOAT, false, 0, myCubeNormals);
+
+    glEnableVertexAttribArray(spSimplestTextured->a("texCoord"));
+    glVertexAttribPointer(spSimplestTextured->a("texCoord"), 2, GL_FLOAT, false, 0, myCubeTexCoords);
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, tex2);
+    glUniform1i(spSimplestTextured->u("tex2"), 0);
+
+    glDrawArrays(GL_TRIANGLES, 0, myCubeVertexCount);
+
+    glDisableVertexAttribArray(spSimplestTextured->a("vertex"));
+    glDisableVertexAttribArray(spSimplestTextured->a("normal"));
+    glDisableVertexAttribArray(spSimplestTextured->a("texCoord"));
+
+    mat4 wallMatrix2 = translate(initMatrix, vec3(0, 5, -1 * C_ROOM_SIZE));
+    wallMatrix2 = scale(wallMatrix2, vec3(C_ROOM_SIZE,5.0f, 0.1f));
     glUniform4f(spSimplest->u("kd"), 0.2, 0.9, 0.4, 1);
     glUniformMatrix4fv(spSimplest->u("M"), 1, false, value_ptr(wallMatrix2));
     Models::cube.drawSolid();
 
-    mat4 wallMatrix3 = translate(initMatrix, vec3(C_ROOM_SIZE, 0, 0));
+    mat4 wallMatrix3 = translate(initMatrix, vec3(C_ROOM_SIZE, 5, 0));
     wallMatrix3 = scale(wallMatrix3, vec3(0.1f, 5.0f, C_ROOM_SIZE));
     glUniform4f(spSimplest->u("kd"), 0.7, 0.7, 0.4, 1);
     glUniformMatrix4fv(spSimplest->u("M"), 1, false, value_ptr(wallMatrix3));
     Models::cube.drawSolid();
 
-    mat4 wallMatrix4 = translate(initMatrix, vec3(-1 * C_ROOM_SIZE, 0, 0));
+    mat4 wallMatrix4 = translate(initMatrix, vec3(-1 * C_ROOM_SIZE, 5, 0));
     wallMatrix4 = scale(wallMatrix4, vec3(0.1f, 5.0f, C_ROOM_SIZE));
     glUniform4f(spSimplest->u("kd"), 0.2, 0.2, 0.4, 1);
     glUniformMatrix4fv(spSimplest->u("M"), 1, false, value_ptr(wallMatrix4));
@@ -563,6 +583,9 @@ int main(void) {
         pos += ws * (float)time * mdir * C_MOVEMENT_SPEED;
 
         if (abs(pos.x) < C_AQUARIUM_WIDTH + 0.1f && abs(pos.z) < C_AQUARIUM_DEPTH + 0.1f) {
+            pos = vec3(pos_prev.x, pos.y, pos_prev.z);
+        }
+        if (abs(pos.x) > C_ROOM_SIZE/2 + 5 || abs(pos.z) > C_ROOM_SIZE/2 + 5){
             pos = vec3(pos_prev.x, pos.y, pos_prev.z);
         }
 
