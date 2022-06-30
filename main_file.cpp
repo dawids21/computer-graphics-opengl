@@ -158,34 +158,6 @@ void activateConstantShader() {
     glUniformMatrix4fv(spConstant->u("V"), 1, false, glm::value_ptr(V));
 }
 
-
-void activateLambertShader() {
-    glm::mat4 P = glm::perspective(glm::radians(50.0f), 1.0f, 1.0f, 50.0f);
-    glm::mat4 V = glm::lookAt(pos, pos + dir, glm::vec3(0.0f, 1.0f, 0.0f));
-
-    spLambert->use();
-    glUniformMatrix4fv(spLambert->u("P"), 1, false, glm::value_ptr(P));
-    glUniformMatrix4fv(spLambert->u("V"), 1, false, glm::value_ptr(V));
-}
-
-void activateLambertTexturedShader() {
-    glm::mat4 P = glm::perspective(glm::radians(50.0f), 1.0f, 1.0f, 50.0f);
-    glm::mat4 V = glm::lookAt(pos, pos + dir, glm::vec3(0.0f, 1.0f, 0.0f));
-
-    spLambertTextured->use();
-    glUniformMatrix4fv(spLambertTextured->u("P"), 1, false, glm::value_ptr(P));
-    glUniformMatrix4fv(spLambertTextured->u("V"), 1, false, glm::value_ptr(V));
-}
-
-void activateTexturedShader() {
-    glm::mat4 P = glm::perspective(glm::radians(50.0f), 1.0f, 1.0f, 50.0f);
-    glm::mat4 V = glm::lookAt(pos, pos + dir, glm::vec3(0.0f, 1.0f, 0.0f));
-
-    spTextured->use();
-    glUniformMatrix4fv(spTextured->u("P"), 1, false, glm::value_ptr(P));
-    glUniformMatrix4fv(spTextured->u("V"), 1, false, glm::value_ptr(V));
-}
-
 void activateSimplestShader() {
     glm::mat4 P = glm::perspective(glm::radians(50.0f), 1.0f, 1.0f, 50.0f);
     glm::mat4 V = glm::lookAt(pos, pos + dir, glm::vec3(0.0f, 1.0f, 0.0f));
