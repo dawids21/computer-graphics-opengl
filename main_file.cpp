@@ -487,11 +487,11 @@ void drawFish(glm::mat4 aquariumMatrix) {
 void drawLamps(glm::mat4 unitMatrix) {
     using namespace glm;
     activateConstantShader();
-    mat4 lightMatrix1 = translate(unitMatrix, vec3(-C_ROOM_SIZE, 4, 0));
+    mat4 lightMatrix1 = translate(unitMatrix, vec3(-C_ROOM_SIZE, 5, 0));
     glUniform4f(spConstant->u("color"), 0.9, 0.9, 0.7, 1);
     glUniformMatrix4fv(spConstant->u("M"), 1, false, value_ptr(lightMatrix1));
     Models::sphere.drawSolid();
-    mat4 lightMatrix2 = translate(unitMatrix, vec3(C_ROOM_SIZE, 4, 0));
+    mat4 lightMatrix2 = translate(unitMatrix, vec3(C_ROOM_SIZE, 5, 0));
     glUniformMatrix4fv(spConstant->u("M"), 1, false, value_ptr(lightMatrix2));
     Models::sphere.drawSolid();
 }
