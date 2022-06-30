@@ -77,21 +77,21 @@ void key_callback(GLFWwindow* window, int key,
 	if (action == GLFW_PRESS) {
 		if (key == GLFW_KEY_LEFT) speed_y = 1;
 		if (key == GLFW_KEY_RIGHT) speed_y = -1;
-		if (key == GLFW_KEY_PAGE_UP) speed_x = 1;
-		if (key == GLFW_KEY_PAGE_DOWN) speed_x = -1;
-		if (key == GLFW_KEY_UP) ws = 1;
-		if (key == GLFW_KEY_DOWN) ws= -1;
-	}
-	if (action == GLFW_RELEASE) {
-		if (key == GLFW_KEY_LEFT) speed_y = 0;
-		if (key == GLFW_KEY_RIGHT) speed_y = 0;	
+                if (key == GLFW_KEY_S) speed_x = 1;
+                if (key == GLFW_KEY_W) speed_x = -1;
+                if (key == GLFW_KEY_UP) ws = 1;
+                if (key == GLFW_KEY_DOWN) ws = -1;
+        }
+        if (action == GLFW_RELEASE) {
+            if (key == GLFW_KEY_LEFT) speed_y = 0;
+            if (key == GLFW_KEY_RIGHT) speed_y = 0;
 
-		if (key == GLFW_KEY_UP) ws = 0;
-		if (key == GLFW_KEY_DOWN) ws = 0;
-		
-		if (key == GLFW_KEY_PAGE_UP) speed_x = 0;
-		if (key == GLFW_KEY_PAGE_DOWN) speed_x = -0;
-	}
+            if (key == GLFW_KEY_UP) ws = 0;
+            if (key == GLFW_KEY_DOWN) ws = 0;
+
+            if (key == GLFW_KEY_S) speed_x = 0;
+            if (key == GLFW_KEY_W) speed_x = -0;
+        }
 }
 GLuint readTexture(const char* filename) {
 	GLuint tex;
