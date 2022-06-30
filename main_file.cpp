@@ -52,7 +52,6 @@ float ws = 0;
 
 
 GLuint tex;
-GLuint tex2;
 
 vec3 pos = vec3(0, C_PERSON_HEIGHT, -5);
 vec3 pos_prev = vec3(0, C_PERSON_HEIGHT, -5);
@@ -139,7 +138,6 @@ void initOpenGLProgram(GLFWwindow* window) {
     glDisable(GL_CULL_FACE);
     glfwSetKeyCallback(window, key_callback);
     tex = readTexture("./models/floor/floor.png");
-    tex2 = readTexture("./models/walls/wall.png");
 }
 
 // Release resources allocated by the program
